@@ -1,0 +1,157 @@
+package org.apache.http.examples.client;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 将三种方式的算法对比一下，我们可以分析出test1中的方法是效率最高的，因为他不需要复制array中的内容，而是直接返回一个List,
+ * 但这种方式是不能添加和删除元素的。
+ * test2和test3本质上是一种方式，它们将创建array的副本到ArrayList中，当然就可以实现增删功能。
+ * 两种方式要根据自己的需求而定
+ * 
+ * add实际上是AbstractList中的add方法
+ */
+public class ArrayListReview
+{
+        public static void main(String[] args)
+        {
+            ArrayListReview.test1();
+            ArrayListReview.test2();
+            ArrayListReview.test3();
+        }
+
+        /**
+         * 这里有个很重要的知识点 >>> 
+         * 这个 ArrayList 是 Arrays 的内部类，可不要看成是 java.util.ArrayList，从方法来看只是一个只读的数组，
+         * 并没有扩展 add 等添加的方法，如果调用 list 的 add 方法会抛出异常: UnsupportedOperationException
+         */
+        public static void test1()
+        {
+            String[] words = {"acid", "ph", "crew", "dog", "eon"};
+ 
+            // 弄清楚各自类的继承关系,add 方法是在哪个类中定义的, 改类是否和此类有继承关系?
+            List<String> wordList = Arrays.asList(words);
+            // Arrays$ArrayList 此 ArrayList != java.util.ArrayList
+            // Exception in thread "main" java.lang.UnsupportedOperationException
+            // at java.util.AbstractList.add(AbstractList.java:131)
+            // at java.util.AbstractList.add(AbstractList.java:91)
+            wordList.add("error");
+            
+            for (String e : wordList)
+            {
+                System.out.println(e);
+            }
+        }
+
+        /**
+         * java.util.ArrayList 的构造函数 new ArrayList<String>(Arrays.asList(words));
+         * public ArrayList(Collection<? extends E> c) 
+         */
+        /* 
+        private static class ArrayList<E> extends AbstractList<E>
+        implements RandomAccess, java.io.Serializable
+        {
+        private final E[] a;
+        ArrayList(E[] array) 
+        {
+            if (array==null) throw new NullPointerException();
+            a = array;
+        }
+        public static <T> List<T> asList(T... a) {return new ArrayList<T>(a);} 
+        public static void sort(long[] a) {sort1(a, 0, a.length);} */
+        public static void test2()
+        {
+            String[] words = {"ace", "boom", "crew", "dog", "eon"};
+
+            List<String> wordList = new ArrayList<String>(Arrays.asList(words));
+            wordList.add("1");
+            for (String e : wordList)
+            {
+                System.out.println(e);
+            }
+        }
+
+        /**
+         * java.util.ArrayList 的构造函数  public ArrayList(int initialCapacity)
+         *  public ArrayList(int initialCapacity)
+         */
+        public static void test3()
+        {
+            String[] words = {"ace", "boom", "crew", "dog", "eon"};
+            List<String> wordList = new ArrayList<String>(words.length);
+
+            for (String e : words)
+            {
+                wordList.add(e);
+            }
+            wordList.add("2");
+            
+            for (String e : wordList)
+            {
+                System.out.println(e);
+            }
+        }
+    
+}
+
+<isap:select id="audittrageorga" emptyoption="true"
+name="audit.audittrageorga" datadictid="C.CSP.KBS.PROVINCE"
+value="audit.audittrageorga" list="{'200','210'}"/>
+
+@in(name = "bulletin", scope = "request")
+private Bulletin bulletin = null;
+
+@in(name = "msg_bulletinService", scope = "beans")
+private transient BulletinService bulletinSerivce;
+
+$ 表达式复习, struts2 标记复习 (学习重点知识)
+rtexprvalue的全称是 Run-time Expression Value,它用于表示是否可以使用JSP表达式.
+public class TreeTableHeaderTag extends BaseComponentTag
+
+// eclipse-->window-->show view-->svn选项卡中选中要删除的svn链接,删除(废弃)即可.
+java.util.Formatter
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
+
+-- 最好用的日期工具类
+String类的format()方法用于创建格式化的字符串以及连接多个字符串对象
+format()方法有两种重载形式。
+format(String format, Object... args) 新字符串使用本地语言环境,制定字符串格式和参数生成格式化的新字符串.
+format(Locale locale, String format, Object... args) 使用指定的语言环境,制定字符串格式和参数生成格式化的字
+
+provision 最初源自拉丁语的provisionem,古法语的provision:意为先见之明,深谋远虑在金融领域
+reserve是 (主动要求)预定的意思 
+呆坏帐准备金(provision for bad and doubtful debts)
+The u. s. government helped finance the transaction. >>> 美国政府帮助为这笔交易提供了融资
+
+http://blog.csdn.net/ago52030/article/details/1739325#t2 
+JBPM >> java 开源工作流框架,可以画流程图,围绕它可以开发:
+请假流程,出差报销申请,业务考核流程,问题投诉处理流程....
+
+参考例子:
+http://www.open-open.com/doc/view/5ee691b8c9e240359a18852a26d46256
+
+http://www.jbpm.org/
+http://docs.jboss.org/jbpm/v6.2/userguide/
+gitHub:
+http://jingyan.baidu.com/article/455a9950abe0ada167277864.html
+
+hongluseeker | lovehonglu2015 | qingyuanseeker 
+repo: qingyuanseeker/honglu_coder <repo>
+https://github.com/qingyuanseeker/honglu_coder.git
+https://github.com/qingyuanseeker/honglu_coder/tree/master
+The organization will live at https://github.com/ 
+
+Pushing to https://github.com/qingyuanseeker/honglu_coder.git
+To         https://github.com/qingyuanseeker/honglu_coder.git
+master -> master (fetch first)
+error: failed to push some refs to 'https://github.com/qingyuanseeker/honglu_coder.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
