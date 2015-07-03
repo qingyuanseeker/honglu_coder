@@ -1,0 +1,285 @@
+
+Can you imagine being stuck with her ? | Unfortunately, I'm stuck with Java 6
+java 7的try-with-resources释放资源 >>> 
+adj.潜在的,含蓄的,基础的,表面下的,下层的,[法]优先的;
+We must start with the underlying challenges. >> spiritualize
+
+//try-with-resource statement
+try (PrintWriter out2 = new PrintWriter(new BufferedWriter(new FileWriter("out.txt", true)))) 
+{
+  out2.println("the text");
+} 
+catch (IOException e) 
+{
+  e.printStackTrace();
+}
+
+//close() is in finally clause
+PrintWriter out = null;
+try 
+{
+    out = new PrintWriter(new BufferedWriter(new FileWriter("out.txt", true)));
+    out.println("the text");
+} 
+catch (IOException e) 
+{
+    e.printStackTrace();
+} 
+finally 
+{
+    if (out != null) 
+	{
+        out.close();
+    }
+}
+
+-- Java IO操作:
+input = zipFile.getInputStream(entry);
+File localFile = new File(unzipFile.getAbsolutePath() + File.separator + entryName);
+output = new FileOutputStream (localFile);  // BUG MARKED HERE
+byte[] buffer = new byte[1024 * 8];
+int readLen = 0;
+while ((readLen = input.read(buffer, 0, 1024 * 8)) != -1) 
+{
+	output.write(buffer, 0, readLen);
+}
+
+or if you are in Java 7
+ByteArrayOutputStream out = new ByteArrayOutputStream();
+try (ObjectOutputStream s = new ObjectOutputStream(out)) 
+{
+	s.writeObject(1);
+}
+
+#!/bin/ksh
+typeset cpunum=`cat /proc/cpuinfo | grep -m 1 'cpu cores' | awk -F ':' '{print $2}' | sed 's/ //g''
+nbtstat 及 netstat 命令---查对方IP-mac地址就这么简单 
+C:\Users\xwx192794>net view | findstr 55086
+\\Z55086BG   Z55086BG
+
+HttpServletRequest request = ServletActionContext.getRequest();
+HttpServletResponse response=ServletActionContext.getResponse();
+Cookie cookie = new Cookie("JSESSIONID", request.getSession().getId());
+response.addCookie(cookie);
+
+1.Linux链接概念 >> nbtstat -a | net view 
+Linux链接分两种,一种被称为硬链接(Hard Link)另一种被称为符号链接(Symbolic Link).默认情况下,ln命令产生硬链接.
+
+【硬连接】 ls -ali
+硬连接指通过索引节点来进行连接.在Linux的文件系统中,保存在磁盘分区中的文件不管是什么类型都给它分配一个编号,
+称为索引节点号(Inode Index).在Linux中,多个文件名指向同一索引节点是存在的.一般这种连接就是硬连接.硬连接的作
+用是允许一个文件拥有多个有效路径名,这样用户就可以建立硬连接到重要文件,以防止“误删”的功能.其原因如上所述,因
+为对应该目录的索引节点有一个以上的连接.只删除一个连接并不影响索引节点本身和其它的连接,只有当最后一个连接被
+删除后,文件的数据块及目录的连接才会被释放.也就是说,文件真正删除的条件是与之相关的所有硬连接文件均被删除.
+
+【软连接】 类似 windows 快捷方式
+另外一种连接称之为符号连接Symbolic Link,也叫软连接.软链接文件有类似于Windows的快捷方式.它实际上是一个特殊的
+文件.在符号连接中,文件实际上是一个文本文件,其中包含的有另一文件的位置信息.
+
+2.通过实验加深理解 ln | ln -s 
+[oracle@Linux]$ touch f1     #创建一个测试文件f1
+[oracle@Linux]$ ln f1 f2     #创建f1的一个硬连接文件f2
+[oracle@Linux]$ ln -s f1 f3  #创建f1的一个符号连接文件f3
+[oracle@Linux]$ ls -li       # -i参数显示文件的inode节点信息
+total 0
+9797648 -rw-r--r--  2 oracle oinstall 0 Apr 21 08:11 f1
+9797648 -rw-r--r--  2 oracle oinstall 0 Apr 21 08:11 f2
+9797649 lrwxrwxrwx  1 oracle oinstall 2 Apr 21 08:11 f3 -> f1
+
+从上面的结果中可以看出,硬连接文件f2与原文件f1的< [inode节点相同,均为9797648,]>然而符号连接文件的inode节点不同.
+
+[oracle@Linux]$ echo "I am f1 file" >> f1
+[oracle@Linux]$ cat f1
+I am f1 file
+[oracle@Linux]$ cat f2
+I am f1 file
+[oracle@Linux]$ cat f3
+I am f1 file
+[oracle@Linux]$ rm -f f1
+[oracle@Linux]$ cat f2
+I am f1 file
+[oracle@Linux]$ cat f3
+cat: f3: No such file or directory
+
+通过上面的测试可以看出：当删除原始文件f1后,硬连接f2不受影响,但是符号连接f1文件无效
+
+3.总结 >> <[ 依此您可以做一些相关的测试,可以得到以下全部结论]>
+1). 删除符号连接f3,对f1,f2无影响；
+2). 删除硬连接f2,对f1,f3也无影响；
+3). 删除原文件f1,对硬连接f2没有影响,导致符号连接f3失效；
+4). 同时删除原文件f1,硬连接f2,整个文件会真正的被删除.
+
+如果你想在当前目录下 查找"hello,world!"字符串,可以这样:
+grep -rn "hello,world!" ./
+./ : 表示路径为当前目录.-r 是递归查找-n 是显示行号
+
+vi里面查找? 直接  /要查找的内容 [这两种方式: grep 后面不需引号,直接跟目标字符串]
+cat 文件 | grep 'int' 
+suse104 hwcsp6/conf> cat log4j.xml  | grep INFO
+<level value="INFO" />
+suse104 hwcsp6/conf> cat log4j.xml  | grep -n INFO
+
+suse104 hwcsp6/conf> grep -rn INFO ./
+./log4j.xml:101:                <level value="INFO" />
+./log4j.xml:106:                <level value="INFO" />
+
+ps -ef是查看所有的进程的然后用grep筛选出你要的信息
+[root@localhost bin]# ps -ef | grep oscard
+
+tail notes要指定从 notes 文件末尾开始读取的行数 input： 
+tail -n 20 notes 
+2. 如果你想查看文件的后10行.可以使用tail命令.如：
+tail -10 /etc/passwd
+tail -f /var/log/messages >> 参数-f使tail不停地去读最新的内容.这样有实时监视的效果
+
+传输层---通过接口关联(端口的字段叫做端口)---应用层.
+用netstat –an 可以查看本机开放的端口号.
+代理服务器常用以下端口：
+(1). HTTP协议代理服务器常用端口号：80/8080/3128/8081/9080
+(2). SOCKS代理协议服务器常用端口号：1080
+(3). FTP(文件传输)协议代理服务器常用端口号：21
+(4). Telnet(远程登录)协议代理服务器常用端口：23
+ 
+HTTP  服务器.默认的端口号为80/tcp (木马Executor开放此端口)
+HTTPS (securely transferring web pages) 服务器.默认的端口号为443/tcp 443/udp；
+Telnet (不安全的文本传送).默认端口号为23/tcp (木马Tiny Telnet Server所开放的端口)
+FTP.默认的端口号为21/tcp(木马Doly Trojan、Fore、Invisible FTP、WebEx、WinCrash和Blade Runner所开放的端口)；
+TFTP(Trivial File Transfer Protocol ).默认的端口号为69/udp；
+SSH(安全登录)、SCP(文件传输)、端口重定向.默认的端口号为22/tcp；
+SMTP Simple Mail Transfer Protocol (E-mail).默认的端口号为25/tcp(木马Antigen、Email Password Sender、Haebu Coceda、Shtrilitz Stealth、WinPC、WinSpy都开放这个端口)；
+POP3 Post Office Protocol (E-mail) .默认的端口号为110/tcp；
+WebLogic.默认的端口号为7001；
+Webshpere应用程序.默认的端口号为9080；
+webshpere管理工具.默认的端口号为9090；
+JBOSS. 默认的端口号为8080；
+TOMCAT.默认的端口号为8080；
+WIN2003 远程登陆.默认的端口号为3389；
+Symantec AV/Filter for MSE ,默认端口号为 8081；
+Oracle 数据库.默认的端口号为1521；
+ORACLE EMCTL.默认的端口号为1158；
+Oracle XDB( XML 数据库).默认的端口号为8080；
+Oracle XDB FTP服务.默认的端口号为2100；
+MS SQL*SERVER数据库server.默认的端口号为1433/tcp 1433/udp；
+MS SQL*SERVER数据库monitor.默认的端口号为1434/tcp 1434/udp；
+QQ. <[默认的端口号为1080/udp]>
+
+通信工程 >> (也作电信工程,旧称远距离通信工程,弱电工程)
+通信工程研究的是以电磁波,声波或光波的形式把信息通过电脉冲,从发送端 (信源)传输到一个或多个接受端(信宿),
+接受端能否正确辨认信息,取决于传输中的损耗高低,信号处理是通信工程中一个重要环节,其包括过滤,编码和解码等
+
+vendor >> n.卖主; 摊贩,小贩; [贸易]自动售货机; <正式>供应商;
+
+进入目录: /home/weblogic/user_projects/domains/base_domain/bin
+启动WebLogic：
+[root@dev bin]# ./startWebLogic.sh 
+停止WebLogic：
+[root@dev bin]# ./stopWebLogic.sh 
+
+上面这两条命令运行后不会在后台运行,因此不能关闭该终端窗口,一般我们需要让WebLogic在后台运行,可以通过以下两种方法解决这个问题
+
+方法一: 执行以下命令：
+[root@dev bin]# nohup ./startWebLogic.sh & 
+
+方法二: 分别执行以下命令： 
+[root@dev bin]# ./startWebLogic.sh 
+
+然后可以与用户进行交互,比如输入用户名密码
+接着按下 "Ctrl + z" | 输入"bg"后程序将进入后台运行
+使用上面两种方法让WebLogic在后台运行,如果想停止运行,仍然可以使用 <[ ./stopWebLogic.sh ]>命令来停止
+
+一：Linux下tomcat服务的启动,关闭与错误跟踪,使用PuTTy远程连接到服务器以后,通常通过以下几种方式启动关闭tomcat服务
+切换到tomcat主目录下的bin目录 cd usr/local/tomcat/bin
+
+1: 启动tomcat服务
+方式一：直接启动 ./startup.sh
+方式二：作为服务启动 nohup ./startup.sh &
+方式三：控制台动态输出方式启动 ./catalina.sh run 动态地显示tomcat后台的控制台输出信息,Ctrl+C后退出并关闭服务
+
+解释：
+通过方式一,方式三启动的tomcat有个弊端,当客户端连接断开的时候,tomcat服务也会立即停止,通过方式二可以作为linux服务一直运行
+通过方式一,方式二方式启动的tomcat,其日志会写到相应的日志文件中,而不能动态地查看tomcat控制台的输出信息与错误情况,通过方式
+三可以以控制台模式启动tomcat服务，直接看到程序运行时后台的控制台输出信息,不必每次都要很麻烦的打开catalina.out日志文件进
+行查看,这样便于跟踪查阅后台输出信息,tomcat控制台信息包括log4j和System.out.println()等输出的信息; <如同 eclipse console 信息>
+
+cat file|more分屏显示文件内容(先显示文件内容,再将结果内容传给后一个命令分屏)
+cat file|grep abc 显示包含字符abc的文件内容(先显示文件内容,再将结果内容传给后一个命令搜索,grep具有搜索功能)
+
+14，tail -->显示文件尾部内容
+tail -f ./catalina.out，#将文件最尾部内容显示在屏幕上，并不断刷新显示，按ctrl+c或delete退出。
+15，netstat或者lsof-->查看网络端口与进程号
+netstat -anp | grep 8080 直接查看指定端口的进程pid
+协议  本地地址          外部地址        状态           PID
+TCP   0.0.0.0:80      0.0.0.0:8080    LISTENING      5144/java
+
+<[http://blog.csdn.net/zhangzhikaixinya/article/details/8224307]>
+<[http://blog.libnav.com/sql/352.html]>
+Linux 提供了 fg 和bg 命令,让你轻松调度正在运行的任务,假设你发现前台运行的一个程序需要很长的时间,但是需要干其他的事情
+你就可以用 Ctrl-Z ,挂起这个程序,然后可以看到系统提示： 
+[1]+ Stopped /root/bin/rsync.sh 然后我们可以把程序调度到后台执行
+
+cd /data/shell >> 
+bash hello.sh
+
+cd /data/shell >> 
+sh hello.sh
+
+步骤4 启动环境：
+startcsp;showlog | 或者 all <[加载环境变量中了]> | <[Linux 可以一行执行多个命令, 命令用分号分隔]>
+head  -n 300 ${HOME}/hwcsp6/logs/tomcatconsole.log
+/bin 基础系统所需要的命令位于此目录,是最小系统所需要的命令,如:ls, cp, mkdir等,这个目录中的文件都是可执行的,一般的用户都可以使用
+suse104 hwcsp6/bin> echo $PATH
+/home/csp_yjkfc21/hwcsp6/jdk1.6.0_81/bin:
+/home/csp_yjkfc21/hwcsp6/bin:
+/home/csp_yjkfc21/hwcsp6/icdcomm/bin:
+
+linux中如何设置能使一个脚本在任意目录下都可直接运行,不要非到这个脚本所在目录下运行
+把这个脚本所在目录加入PATH环境变量中,修改/etc/profile 加入一行: 
+export PATH=$PATH:/脚本目录/或者修改 /etc/environment 将目录加到PATH后面
+
+find 在 linux 环境找文件
+find . -maxdepth 1 -name "@*" 
+这个命令意思是,查找当前目录下以@开头的文件或者目录,搜索深度为一级也就是只在当前目录找,不进入子目录,如果你要从/目录开始找就:
+find / -maxdepth 1 -name "@*"  如果想搜全盘,就把-maxdepth 1 去掉 [ linux 环境的根目录为 "/" ]
+
+dir *.doc /s 是列目录 > 是重新指向命令。
+dir *.doc /s > c:\1.txt就是把应该列在屏幕上的文字输出到c:\1.txt的文件中
+
+linux 下java 环境变量的设置:
+修改/etc/profile文件 ,如果你的计算机仅仅作为开发使用时推荐使用这种方法,因为所有用户的shell都有权使用这些环境变量
+,可能会给系统带来安全性问题 
+·用文本编辑器打开 /etc/profile ·在profile 文件末尾加入： 
+export JAVA_HOME=/usr/share/jdk1.6.0_14 
+export PATH=$JAVA_HOME/bin:$PATH 
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar 
+
+-- 服务器上的配置项:
+if [ $USER = "tomcat" ]; then
+   export JAVA_HOME=/home/accessserver/jdk1.6.0_45 
+   export PATH=$JAVA_HOME/bin:$PATH 
+   export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar 
+fi
+
+<[ 重新登录 ·注解 ]>
+a. 你要将 /usr/share/jdk1.6.0_14 改为你的jdk安装目录 
+b. linux下用冒号 ":" 来分隔路径 
+c. $PATH / $CLASSPATH / $JAVA_HOME 是用来引用原来的环境变量的值, 在设置环境变量时特别要注意不能把原来的值给覆盖掉了,
+   这是一种常见的错误; 
+d. CLASSPATH中当前目录 "." 不能丢,把当前目录丢掉也是常见的错误 
+e. export是把这三个变量导出为全局变量 
+f. 大小写必须严格区分
+
+inverter逆变器是把直流电能(电池,蓄电瓶)转变成交流电(一般为220v50HZ正弦或方波).通俗的讲,逆变器是一种将
+直流电(DC)转化为交流电(AC)的装置.它由逆变桥,控制逻辑和滤波电路组成.广泛适用于空调,家庭影院,电动砂轮
+,电动工具,缝纫机,DVD,VCD,电脑,电视,洗衣机,抽油烟机,冰箱,录像机,按摩器,风扇,照明等 .
+简单地说,逆变器就是一种将低压(12或24伏或48伏)直流电转变为220伏交流电的电子设备.因为我们通常是将220伏交流电
+整流变成直流电来使用,而逆变器的作用与此相反,因此而得名.我们处在一个“移动”的时代,移动办公,移动通讯,移动
+休闲和娱乐.在移动的状态中,人们不但需要由电池或电瓶供给的低压直流电,同时更需要我们在日常环境中不可或缺的220
+伏交流电,逆变器就可以满足我们的这种需求.
+
+1.你是用交流电还是直流电启动它?
+Are you using alternate or direct current to charge it?
+1. alternating current (AC)
+2. AC Alernating current
+3. alternating currents
+4. AC(alternating current)
+5. AC Alternating Current
