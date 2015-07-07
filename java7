@@ -1,0 +1,155 @@
+
+the try-with-resource statement
+the try-with-resource statement is a try statement that declares one or more resources, A
+resource is as an object that must be closed after the program is finished with it, the try
+-with-resources statement ensures that each resources is closed at the end of the statement
+any object that implements java.lang.AutoCloseable, which includes all objects which implemnts
+java.io.Closeable, can be used as a resources.
+
+// IO operation here:
+public static void writeToFileZipFileContents(String zipFileName, String outputFileName)
+    throws java.io.IOException {
+
+    java.nio.charset.Charset charset = java.nio.charset.Charset.forName("US-ASCII");
+    java.nio.file.Path outputFilePath = java.nio.file.Paths.get(outputFileName);
+	// 创建资源,并在代码块结束的时候自动 close 
+	// The try-with-resources statement ensures that each resource is closed at the end of the statement
+    try (
+      java.util.zip.ZipFile zf = new java.util.zip.ZipFile(zipFileName);
+      java.io.BufferedWriter writer = java.nio.file.Files.newBufferedWriter(outputFilePath, charset)
+    ) {
+      for (java.util.Enumeration entries = zf.entries(); entries.hasMoreElements();) {
+        String newLine = System.getProperty("line.separator");
+        String zipEntryName = ((java.util.zip.ZipEntry)entries.nextElement()).getName() + newLine;
+        writer.write(zipEntryName, 0, zipEntryName.length());
+      }
+    }
+  }
+
+The following example uses a try-with-resources statement to automatically close a java.sql.Statement object:
+  public static void viewTable(Connection con) throws SQLException {
+
+    String query = "select COF_NAME, SUP_ID, PRICE, SALES, TOTAL from COFFEES";
+    // 创建资源,并在代码块结束的时候自动 close 
+	// The try-with-resources statement ensures that each resource is closed at the end of the statement
+    try (Statement stmt = con.createStatement()) {
+
+      ResultSet rs = stmt.executeQuery(query);
+
+      while (rs.next()) {
+        String coffeeName = rs.getString("COF_NAME");
+        int supplierID = rs.getInt("SUP_ID");
+        float price = rs.getFloat("PRICE");
+        int sales = rs.getInt("SALES");
+        int total = rs.getInt("TOTAL");
+        System.out.println(coffeeName + ", " + supplierID + ", " + price +
+        ", " + sales + ", " + total);
+      }
+
+    } catch (SQLException e) {
+      JDBCTutorialUtilities.printSQLException(e);
+    }
+  }
+
+java 7 的 7 个新特性:
+a: 对集合类的语言支持;
+b: 自动资源管理;
+c: 改进的通用实例创建类型推断
+d: 数字字面量下划线支持;
+e: switch 中使用 String
+f: 二进制字面量
+g: 简化可变参数方法调用:
+
+java 将包含对创建集合类的第一类语言的支持,这意味着集合类的创建可以像Ruby 和 perl 那样了:
+以前是这样的:
+List<String> list = new ArrayList<String>();
+list.add("item");
+String item = list.get(0);
+
+Set<String> set = new HashSet<String>();
+set.add("item");
+Map<String, Integer> map = new HashMap<String, Integer>();
+set.add("entry");
+
+Map<String, Integer> map = new HashMap<String, Integer>();
+map.put("key", 1);
+int value = map.get("key");
+
+java 7.0 以后的写法是这样的......
+List<String> list = ["item"]; // 数组
+String item = list[0];  // 下标访问
+Set<String> set = {"item"}; // 对象
+Map<String, Integer> map = {"key" : 1}; // 第一语言语法支持
+int value = map["key"]; // key访问
+
+Java7里try-with-resources分析 <[自动资源管理]>
+
+这个所谓的try-with-resources,是个语法糖,实际上就是自动调用资源的close()函数,
+和Python里的with语句差不多;
+
+Java中某些资源是需要手动关闭的,如InputStream,Writes,Sockets,Sql classes等
+这个新的语言特性允许try语句本身申请更多的资源,这些资源作用于try代码块,并自动关闭
+
+static String readFirstLineFromFile(String path) throws IOException {
+    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        return br.readLine();
+    }
+}
+
+可以看到try语句多了个括号,而在括号里初始化了一个BufferedReader,这种在try后面加个括号,
+再初始化对象的语法就叫try-with-resources,实际上,相当于下面的代码,其实略有不同,下面会说明;
+
+static String readFirstLineFromFileWithFinallyBlock(String path) throws IOException {
+    BufferedReader br = new BufferedReader(new FileReader(path));
+    try {
+        return br.readLine();
+    } finally {
+        if (br != null) br.close();
+    }
+}
+很容易可以猜想到,这是编绎器自动在try-with-resources后面增加了判断对象是否为null,如果不为null,
+则调用close()函数的的字节码
+使用try-with-resources的语法可以实现资源的自动回收处理,大大提高了代码的便利性,
+和mutil catch一样,是个好东东,用编绎器生成的字节码的角度来看,try-with-resources语法更加高效点;
+
+3.改进的通用实例创建类型推断；
+类型推断是一个特殊的烦恼,如下面的代码：
+Map<String, List<String>> anagrams = new HashMap<String, List<String>>(); 
+通过类型推断后变成：
+Map<String, List<String>> anagrams = new HashMap<>();
+注：这个<>被叫做diamond运算符,Java 7后这个运算符从引用的声明中推断类型
+
+4.数字字面量下划线支持 <::主要是为了提高数字的可读性::>
+很长的数字可读性不好,在Java 7中可以使用下划线分隔长int以及long了,如：
+int one_million = 1_000_000;
+
+6.二进制字面量
+由于继承C语言,Java代码在传统上迫使程序员只能使用十进制,八进制或十六进制来表示数(numbers)
+由于很少的域是以bit导向的,这种限制可能导致错误,你现在可以使用0b前缀创建二进制字面量:
+int binary = 0b1001_1001; 
+现在,可以使用二进制字面量这种表示方式,并且使用非常简短的代码,可将二进制字符转换为数据类型,如在byte或short
+byte aByte = (byte)0b001;    
+short aShort = (short)0b010;
+
+5.switch中使用string
+这个问题是我在Java中不喜欢用switch的原因之一,以前在switch中只能使用number或enum,现在可以使用string了:
+<[ switch只能支持 byte,short,char,int或者其对应的封装类以及Enum类型,在Java7中,呼吁很久的String支持也终于被加上了]>
+public static void first() 
+{  
+	String status = "approval";   
+	switch (status) 
+	{  
+		case "shouli":  
+			System.out.println("状态是受理");  
+			break;  
+		case "approval":  
+			System.out.println("状态是审批");  
+			break;  
+		case "finish":  
+			System.out.println("状态是结束");  
+			break;  
+		default:  
+			System.out.println("状态未知");  
+	 }  
+}
+
