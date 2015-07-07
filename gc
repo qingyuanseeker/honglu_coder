@@ -1,0 +1,119 @@
+
+// 是成员变量还是局部变量这是个问题: 
+java中System.gc();和Runtime.getRuntime().gc();有何区别 <[java :能在底层解决的问题尽量在底层解决:]> 
+
+java.nio.charset.Charset charset = java.nio.charset.Charset.forName("US-ASCII");
+java.nio.file.Path outputFilePath = java.nio.file.Paths.get(outputFileName);
+// 创建资源,并在代码块结束的时候自动 close 
+// The try-with-resources statement ensures that each resource is closed at the end of the statement
+try (
+  java.util.zip.ZipFile zf = new java.util.zip.ZipFile(zipFileName);
+  java.io.BufferedWriter writer = java.nio.file.Files.newBufferedWriter(outputFilePath, charset)
+) {
+  for (java.util.Enumeration entries = zf.entries(); entries.hasMoreElements();) {
+	String newLine = System.getProperty("line.separator");
+	String zipEntryName = ((java.util.zip.ZipEntry)entries.nextElement()).getName() + newLine;
+	writer.write(zipEntryName, 0, zipEntryName.length());
+  }
+}
+
+// <java :能在底层解决的问题尽量在底层解决:> 让代码尽可能引起虚拟机崩溃的代码出现:
+
+(1) GC是垃圾收集的意思Gabage Collection,内存处理是编程人员容易出现问题的地方,忘记或者错误的内存回收会导致程序或系统的不稳定甚至崩溃,
+    Java提供的GC功能可以自动监测对象是否超过作用域从而达到自动回收内存的目的，Java语言没有提供释放已分配内存的显示操作方法.
+	
+(2) 对于GC来说,当程序员创建对象时,GC就开始监控这个对象的地址,大小以及使用情况,通常,GC采用有向图的方式记录和管理堆(heap)中的所有对象
+    通过这种方式确定哪些对象是"可达的",哪些对象是"不可达的",当GC确定一些对象为"不可达"时,GC就有责任回收这些内存空间,可以,程序员可以
+	手动执行System.gc(),通知GC运行,<[但是Java语言规范并不保证GC一定会执行]>
+
+(3) 垃圾回收是一种动态存储管理技术,它自动地释放不再被程序引用的对象,当一个对象不再被引用的时候,按照特定的<{垃圾收集算法}>来实现资源
+    自动回收的功能. 
+
+(4) System.gc();就是呼叫java虚拟机的垃圾回收器运行回收内存的垃圾 
+
+(5) 当不存在对一个对象的引用时,我们就假定不再需要那个对象,那个对象所占有的存储单元可以被收回,可通过System.gc()方法回收,但一般要把
+    不再引用的对象标志为null为佳 
+
+(6) 每个 Java 应用程序都有一个 Runtime 类实例,使应用程序能够与其运行的环境相连接,可以通过 getRuntime 方法获取当前运行时,Runtime.getRuntime().gc(); 
+
+(7) java.lang.System.gc()只是java.lang.Runtime.getRuntime().gc()的简写,两者的行为没有任何不同。 
+(8) 唯一的区别就是System.gc()写起来比Runtime.getRuntime().gc()简单点,其实基本没什么机会用得到这个命令,因为这个命令只是建议JVM安排GC运行,
+    还有可能完全被拒绝, GC本身是会周期性的自动运行的,由JVM决定运行的时机,而且现在的版本有多种更智能的模式可以选择,还会根据运行的机器自动
+	去做选择,就算真的有性能上的需求,也应该去对GC的运行机制进行微调,而不是通过使用这个命令来实现性能的优化. 
+	
+一般情况下内存泄漏的避免
+在不涉及复杂数据结构的一般情况下,Java的内存泄露表现为一个内存对象的生命周期超出了程序需要它的时间长度,我们有时也将其称为“对象游离”
+	
+public class FileSearch
+{
+    private byte[] content;
+    private File mFile;
+     
+    public FileSearch(File file) {
+        mFile = file;
+    }
+ 
+     public boolean hasString(String str) {
+        int size = getFileSize(mFile);
+        content = new byte[size];
+        loadFile(mFile, content);
+         
+        String s = new String(content);
+        return s.contains(str);
+     }
+ }	
+
+// <[在写代码时候要将内存管理的思想一直要谨记在心:]>
+
+在这段代码中,FileSearch类中有一个函数hasString,用来判断文档中是否含有指定的字符串,流程是先将mFile加载到内存中,然后进行判断,但是,这里的问题是
+将content声明为了实例变量,而不是本地变量,于是,在此函数返回之后,内存中仍然存在整个文件的数据,而很明显,这些数据我们后续是不再需要的,这就造成了
+内存的无故浪费.
+
+要避免这种情况下的内存泄露,要求我们以C/C++的内存管理思维来管理自己分配的内存,第一,是在声明对象引用之前,明确内存对象的有效作用域,在一个函数内有
+效的内存对象,应该声明为local变量,与类实例生命周期相同的要声明为实例变量……以此类推,第二,在内存对象不再需要时,记得手动将其引用置空
+
+Java 中将对象引用置 null 的作用? <相当于给这个对象打了个标记,GC下次执行时候就将其空间回收>
+在书上看到,手动将不用的对象引用置为 null,可以使得 JVM 在下一次 GC 时释放这部分内存,对此我有几个问题.
+
+1. 手动置 null 对于方法内 new 出来的局部变量会起作用吗,还是说局部变量在方法执行完毕之后自动被 GC 了 ?
+2. 除此以外,还有什么针对 GC 的优化方法吗 ?
+
+局部变量根据变量类型的不同,分配的地方也不同,若是基本数据类型会直接在java栈上进行分配,在线程结束后,在NewGc中就会被回收
+一个对象大致上会被分为：
+1.Strong reference: 就是我们new出来的对象,但是还是被持有的应用,垃圾回收时不会回收这个应用
+2.soft reference： 我们new出来的对象,但是已经不被具体对象持有,常见的就是缓存中的对象引用,垃圾回收在内存还够的时候不会
+回收该部分内存信息,只有在内存不够时才会回收这块引用的对象
+3.weak reference: 当对象不在有强引用时候,垃圾回收时立刻回收.
+4.Phantom reference: 不会在内存中出现,因为它一般是同ReferenceQueue一起出现,来跟踪对象是否还是保持强引用
+
+GC回收时候才用的是引用计数法,会去统计对象在被多少其他对象持有了,当有持有数位0的时候,就可以被回收了,所以对于你是否设置为null
+意义并不是很大,特别该对象并不是root引用对象时候.
+
+二: 优化 
+多看看《java编程思想》《effective java 》《深入java虚拟机》《java性能调优》等书,写出符合JVM规范的代码,才是最大的优化
+对于占用空间比较大的对象比如大数组,推荐在确认不再使用的时候将其值为null,jvm在回收大对象的时候不如小对象来的及时,置为null
+就能强制在下次GC的时候回收掉他;
+
+// <[http://jefferent.iteye.com/blog/1123677]>
+虚拟机中的共划分为三个代: 年轻代(Young Generation)年老点(Old Generation)和持久代(Permanent Generation)
+其中持久代主要存放的是Java类的类信息,与垃圾收集要收集的Java对象关系不大,年轻代和年老代的划分是对垃圾收集影响比较大的
+
+持久代:
+用于存放静态文件,如今Java类,方法等,持久代对垃圾回收没有显著影响,但是有些应用可能动态生成或者调用一些class,例如Hibernate 等
+在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类,持久代大小通过-XX:MaxPermSize=<N>进行设置
+
+tenured >>　终身的,长期保有的 
+一般网址中的都是正斜线//, //192.168.21.149/d$, ftp://ftp是说明协议 
+而磁盘路径中都是反斜线C:\, \\是访问共享,\\XWX192794C\jdk7.0
+
+1.这类耳机里面的一个传感器可以侦测各种脑部状态,一个芯片可以将模拟信号转换成数字信号,这样,信号可以通过无线的方式传送到电脑
+The headsets contain a sensor that detects various mental states, and a chip converts the signals from analog format to 
+digital so they can travel wirelessly to a computer.
+
+analog是个名词,比如：analog circuit 
+simulate是个动词,比如：simulate this circuit 再或者：simulate this analog circuit.
+
+在电子行业内,analog会译作模拟,而simulate通常译作仿真[按了log]
+The new radios weren't as effective as the department's old analog equipment, and improved radios weren't introduced until 2003, 
+mr. cassano said..卡萨诺说,新的无线电系统传输效率还不如之前的模拟设备,后来到2003年才配备了更先进的无线电系统;
+
