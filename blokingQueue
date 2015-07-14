@@ -1,0 +1,184 @@
+
+specify >> be specific about >> 
+pacific >> adj.和平的,爱好和平的,太平的,平静的,平时的;太平洋的; 
+
+http://download.csdn.net/download/therbetter/5140651
+http://download.csdn.net/download/therbetter/5140651
+童云兰
+
+介绍了如何使用类库提供的基本并发构建块,用于避免并发危险,
+构造线程安全的类及验证线程安全的规则,如何将小的线程安全类组合成更大的线程安全类,
+如何利用线程来提高并发应用程序的吞吐量,如何识别可并行执行的任务,如何提高单线程
+子系统的响应性,如何确保并发程序执行预期任务,如何提高并发代码的性能和可伸缩性等内容.
+
+facility [英]
+n.设备; 容易; 能力; 灵巧; 
+a building or place that provides a particular service or is used for a particular industry
+skillful performance or ability without difficulty
+a natural effortlessness
+something designed and created to serve a particular function and to afford a particular convenience or service
+a service that an organization or a piece of equipment offers you
+Checkout the facility and the staff. >> <[考察设施配备和人员情况]>
+manufacturingn. >> 制造业，工业; adj.制造业的，制造的; 
+It is also enjoying rapid growth by manufacturing handsets. >> <[它的快速增长也要得益于手机制造]>
+
+摩尔定律是由英特尔创始人之一戈登·摩尔（Gordon Moore）提出来的,其内容为：当价格不变时,集成电路上可容纳的元器件的数目
+约每隔18-24个月便会增加一倍,性能也将提升一倍,换言之,每一美元所能买到的电脑性能,将每隔18-24个月翻一倍以上
+
+问题原因: 项目是在svn是低版本时候检出的,后来进行了svn版本升级,再更新项目就会出现如上问题.
+解决办法: 更新该项目的svn
+右击项目--team--upgrade
+提示的意思就是要更新svn版本,引发问题的原因就是用低版本的svn客户端载下来的代码,后来又升级svn客户端
+去处理之前低版本载下来的代码造成的,右键project--Team--upgrade之后就ok了.
+
+// 弱电井所走的线主要有网络线,电话线,监控线,射频电缆,TV等,一般弱电井走的均为信号线
+// 弱电一般是指直流电路或音频,视频线路,网络线路,电话线路,直流电压一般在36V以内,家用电器中的电话,电脑,电视机的信号输入有线电视线路
+// 音响设备(输出端线路)等用电器均为弱电电气设备
+<div class="condDiv011"> 
+	<bme:link value="更多>>" id="moreLink" >
+	<bme:fire event="click" script="showMore('${moreLink}','${condDiv04}')" />                  
+	</bme:link>
+</div>	
+// 显示隐藏的更多维度 add by dingmin 20150707
+// var clickNum = 0;
+function showMore(moreLink,condDiv04)
+{
+	var moreLink = document.getElementById("moreLink");
+	var condDiv03 = document.getElementById("condDiv03");
+	var condDiv04 = document.getElementById("condDiv04");
+
+	if(condDiv04.style.display != "none" )
+	{
+		$("#condDiv03").css({display: "none"});
+		$("#condDiv04").css({display: "none"});
+		$("#supportDiv").css({display: "none"});
+		$("#productDiv").css({display: "none"});
+		$("#serviceDiv").css({display: "none"});
+		moreLink.innerText = '更多' + ">>";
+		//设置返回上一层按钮的位置
+		//backTopBt.css({left: infoSummaryArea.position().left + 5, top: infoSummaryArea.position().top + 55});
+	}
+	else
+	{
+		$("#condDiv04").css({display: "block"});
+		$("#condDiv03").css({display: "block"});
+		$("#supportDiv").css({display: "block"});
+		$("#productDiv").css({display: "block"});
+		$("#serviceDiv").css({display: "block"});
+		moreLink.innerText = '更多' + "<<";	 	 	
+	} 
+}
+
+// <[获取系统参数]>
+public String getSystemParam(String moduleId, String paramId)
+{
+	TableDataAccessService tableDataAccessService =
+	(TableDataAccessService)ContextHolder.getBean("iface_tableDataAccessService");
+	
+	SystemParam systemParam = tableDataAccessService.get(moduleId, paramId);
+	
+	return null != systemParam ? systemParam.getValue() : null;
+}
+
+//  <[优秀代码]>
+if (!SsocUtil.ins().isNull(selectId))
+{
+	boolean boo = true;
+	
+	// 把级别,默认选中的id, 父ID 遍历出来
+	while (boo)
+	{
+		infoSupport.setQueryId(selectId);
+		infoSupportLocation = new ArrayList<InfoSupportLocation>();
+		infoSupportLocation = comAnalysisService.queryInfoSupport(infoSupport);
+		
+		infoSupportLocationList.add(infoSupportLocation.get(0));
+		selectId = infoSupportLocation.get(0).getSuperid();
+		if ("0".equals(selectId))
+		{
+			boo = false;
+		}
+	}
+}
+
+/**
+ * LinkedBlockingQueue<E>：java.util.concurrent.LinkedBlockingQueue<E>
+ * ConcurrentLinkedQueue<E>：java.util.concurrent.ConcurrentLinkedQueue<E>
+ * http://www.2cto.com/kf/201212/175028.html
+ * http://www.2cto.com/kf/201212/175026.html
+ * http://blog.csdn.net/ymeng_bupt/article/details/6826595
+ * http://blog.csdn.net/ymeng_bupt/article/details/6826936 <[对象锁和类锁 >> 必看]>
+ */
+public class LinkedBlockingQueueReview
+{
+    /**
+    * 一个基于链接节点的, 范围任意的Blocking queue,次队列按照 FIFO 排序元素,队列的头部是在队列中时间最长的元素
+    * 队列的尾部是在队列中时间最短的元素,新元素插入到队列的尾部,并且队列检索操作会获得位于队列头部的元素,链接队列的
+    * 吞吐量通常要高于基于数组的队列,但是在大多数并发应用程序中,其可以预知的性能要低,可选的容量范围构造方法参数作为防止
+    * 队列过度扩展的一种方法,如果未指定容量,则它等于 Integer.MAX_VALUE 除非插入节点会使队列超出容量,否则每次插入后
+    * 会动态地创建链接节点
+    * 
+    * 适用阻塞队列的好处：多线程操作共同的队列时不需要额外的同步,另外就是队列会自动平衡负载,即那边(生产与消费两边)处理快
+    * 了就会被阻塞掉,从而减少两边的处理速度差距
+    */
+   // public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, Serializable
+    
+    /*一个基于链接节点的,无界的,线程安全的队列,此队列按照 FIFO原则对元素进行排序,队列的头部 是队列中时间最长的元素,
+    队列的尾部 是队列中时间最短的元素,新的元素插入到队列的尾部,队列检索操作从队列头部获得元素,当许多线程共享访问一
+    个公共 collection 时,ConcurrentLinkedQueue 是一个恰当的选择,此队列不允许 null 元素*/
+    
+   // public class ConcurrentLinkedQueue<E>extends AbstractQueue<E>implements Queue<E>, Serializable 
+}	
+
+一：在通过PDE导入数据时,默认是先建立了索引,之后再向表中插入数据,插入数据时要维护索引,所以速度很慢,建议当通过PDE导入数据时
+先创建table,然后删除,索引,最后导入数据；
+
+二：通过dmp文件导入数据时,默认是先导入数据,再创建索引,所以说使用dmp的方式效率会比较高；
+三：但是dmp有一个缺点,就是高版本oracle导出的dmp文件,不能导入到低版本数据库中,而低版本oracle的dmp文件则可以导入
+到高版本的orcle中,所以有时候只能选,用pde的方式来导入数据
+
+java集合框架和java多线程整合复习:<[http://kang.iteye.com/blog/364457#]>
+
+线程安全的集合包含2个问题
+1. 多线程并发修改一个集合,怎么办？
+2. 如果迭代的过程中集合被修改了怎么办？
+a. 一个线程在迭代,另一个线程在修改
+b. 在同一个线程内用同一个迭代器对象进行迭代,修改,迭代,修改. . .
+
+共有有3种解决方案
+1.用老的Vector/Hashtable类,上面2个问题都不用担心,Vector/Hashtable所提供的所有方法都是synchronized的,
+如果迭代的过程中数据结构被修改了,迭代器可以反映最新的修改,也不会抛异常,但这种方法效率低下,不建议使用
+
+2.使用ArrayList/HashMap和同步包装器可用同步包装器使容器变成线程安全的
+
+1. List synchArrayList = Collections.synchronizedList(new ArrayList());<br>  
+2. Map synchHashMap = Collections.synchronizedMap(new HashMap())<br>  
+
+3.用java5.0新加入的ConcurrentLinkedQueue、ConcurrentHashMap、CopyOnWriteArrayList 和 CopyOnWriteArraySet
+对这些集合进行并发修改是安全的.
+针对2b的问题,迭代器既不抛异常,也不会反映新的修改.就是说你迭代的是生成迭代器时的容器,不是最新的容器.
+
+oracle数据库分区表按主键查询快还是按主键+分区条件查询快 ? 查询条件最好加上分区索引相关的条件;
+<[http://www.cnblogs.com/biwork/archive/2013/04/11/3015655.html]>
+<[http://www.cnblogs.com/biwork/archive/2013/04/11/3015655.html]>
+我有一张表,TEST,数据量很大, 主键是ID (number)这张表按SQBM(varchar2)字段分区,以下三个SQL,哪个最快? 还是都一样?
+1、select * from TEST where ID=?
+2、select * from TEST where ID=? and SQBM=?
+3、select * from TEST where SQBM=? and ID=?
+我用PL/SQL查询分析器看到效率一样,因为都是走主键的UNIQUEINDEX,但是公司的人说加上SQBM是有作用的,我迷糊了,请大虾指点,谢谢！
+
+1.首先我想知道SQBM字段上是否存在INDEX,INDEX类型是global还是local partition.
+SQBM上没有INDEX的话,则3个SQL的运行性能是一样的.都只会使用PK的index
+2.如果表上存在(ID,SQBM)的组合INDEX,那么你添加SQBM条件是有作用的.
+3.对于SQL2,SQL3 条件顺序颠倒是不会影响性能的.
+
+1、SQBM字段上不存在INDEX,但是这张表按SQBM分区.
+2、表上不存在（ID,SQBM）的组合INDEX.
+3、这是oracle数据库,查询条件从右到左解析,也就是说,能够过滤大量数据的放最后比放前面效率高
+(但这里面有主键,我用PL\SQL查询分析器效率是一样的,但是公司的人说加上SQBM是有作用的,我想知道是我弄错了还是他弄错了).
+ 
+如果表上没有任何INDEX,那么你加SQBM这个条件是有用的,可以由遍历所有分区,变为只遍历SQBM指定值的一个分区.
+如果你SQBM上没有任何INDEX,而ID上存在主键,则3个SQL都会走主键,那么加上SQBM条件不会有任何性能提升.因为SQL
+根本就不会遍历表结构,而是去遍历索引结构.查到相关ID值的INDEX叶节点就会直接指向数据了.也就跟分区没什么关系了.
+
+我不知道你数据库什么版本,使用CBO方式的话,where条件顺序是不会影响性能的.只和你的执行计划有关.
