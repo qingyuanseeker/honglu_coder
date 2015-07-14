@@ -1,0 +1,53 @@
+function blockOrNot()
+{        
+ // var txt1_val=$("#txt1").attr("value"); >> div 对象有 style 属性
+ var ok = document.getElementById("okokok");
+ ok.style.display = "block";
+ alert($("#okokok").attr("display"));
+ $("#okokok").removeAttr("display");
+}
+
+function showMore(moreLink,condDiv04)
+{
+	var moreLink = document.getElementById("moreLink");
+	//alert(moreLink.value);
+	var condDiv03 = document.getElementById("condDiv03");
+	var condDiv04 = document.getElementById("condDiv04");
+	//alert("innerttml："+moreLink.innerText);
+	if(condDiv04.style.display != "none" )
+	{
+		$("#condDiv03").css({display: "none"});
+		$("#condDiv04").css({display: "none"});
+		$("#supportDiv").css({display: "none"});
+		$("#productDiv").css({display: "none"});
+		$("#serviceDiv").css({display: "none"});
+		moreLink.innerText = '更多' + ">>";
+		//设置返回上一层按钮的位置
+		//backTopBt.css({left: infoSummaryArea.position().left + 5, top: infoSummaryArea.position().top + 55});
+	}
+	else
+	{
+		$("#condDiv04").css({display: "block"});
+		$("#condDiv03").css({display: "block"});
+		$("#supportDiv").css({display: "block"});
+		$("#productDiv").css({display: "block"});
+		$("#serviceDiv").css({display: "block"});
+		moreLink.innerText = '更多' + "<<";
+		//backTopBt.css({left: infoSummaryArea.position().left + 5, top: infoSummaryArea.position().top });
+		
+	}	 	 
+}
+
+// :硬盘-内存—北桥—三级缓存(如有)—二级缓存—1级缓存,1,2级缓存几乎包办了85%的指令,缓存的提取速度很高,所以缓存越大电脑越快
+// :缓存是数据由内存通往CPU的桥梁,它的速度比内存快得多,但是容量也比内存小的多,同时缓存依据读取速度和容量进一步分为一级和二级,
+//  在CPU需要数据的时候,遵循一级缓存→二级缓存→内存的顺序,从而尽量提高读取速度
+
+>> <[http://nannan408.iteye.com/blog/1818977]>
+
+4: 常用的缓存插件 Hibernater二级缓存是一个插件,下面是几种常用的缓存插件：     
+◆ EhCache：可作为进程范围的缓存,存放数据的物理介质可以是内存或硬盘,对Hibernate的查询缓存提供了支持 
+◆ OSCache：可作为进程范围的缓存,存放数据的物理介质可以是内存或硬盘,提供了丰富的缓存数据过期策略,对Hibernate的查询缓存提供了支持 
+◆ SwarmCache：可作为群集范围内的缓存,但不支持Hibernate的查询缓存    
+◆ JBossCache：可作为群集范围内的缓存,支持事务型并发访问策略,对Hibernate的查询缓存提供了支持 
+◆ Memcached 
+◆ Redis 
