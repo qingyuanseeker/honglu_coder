@@ -1,0 +1,31 @@
+information-security 
+unspecified notion >> 特定的概念
+presentation  >> n.提交,演出,陈述,报告,颁奖仪式
+acceleration >> the sharp acceleration in job losses.失业的急速增加
+
+// 在JavaScript中,存在有nodeName,nodeType,nodeValue这三个属性
+<scripttype="text/javascript">
+function GetSpecifiedAttributes () 
+{
+	var message = "The following attributes specified for the body:\n";
+
+	for (var i=0; i < document.body.attributes.length; i++) 
+	{
+		var attr = document.body.attributes[i];
+		if (attr.specified)
+		{
+			message += "\n" + attr.nodeName + "=" + attr.nodeValue;
+		}
+	}
+	
+	alert (message);
+}
+</script>
+
+
+
+
+
+
+
+
