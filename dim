@@ -1,0 +1,99 @@
+
+关于 oracle 的分区
+
+StaffBusinessFrameService service = (StaffBusinessFrameService)ContextHolder.getBean("iface_staffBusinessFrameService");
+private ComplainAnalysisService comAnalysisService;
+1: lazy init 在getBean时实例化 
+2: 非lazy的单例bean 容器初始化时实例化 
+3: prototype等 getBean时实例化
+
+bean 的配置 有个lazy-init属性,默认是false,默认是在spring容器启动的时候实例化lazy-init为false的bean,如果lazy-init设置为true
+则在调用容器的getBean(String name)方法时候该bean被实例化
+
+BeanFactory中的Bean在第一次访问的时候才会被实例化；ApplicationContext中的Bean在ApplicationContext初始化的时候就会被实例化
+这样避免了"第一次惩罚"也会提前发现配置的问题和提高运行效率;Singleton的Bean就算设置lazy-init=true,在某些情况下也会被提前实
+例化,当该Bean被其他需要实例化的Bean引用到,Spring也会忽略延迟实例化的设置
+
+维度 >> 
+1. latitude
+2. Dimensions
+钻取 >> 钻取是改变维的层次,变换分析的粒度,它包括向上钻取和向下钻取
+1. drill through
+2. drilling
+
+查看函数院源代码
+oracle会将函数名|存储过程及其源代码信息存放到数据字典中user_source 
+select distinct(Name) from user_source t Where t.name = 'P_SGMT_STATIS';
+
+when others then
+-- 程序出错,得到出错信息,回滚事务,记录程序出错日志,出错返回 --
+vi_err_code := sqlcode;
+vv_err_msg  := substr(sqlerrm, 1, 200);
+rollback;
+
+<[http://wangpj.iteye.com/blog/1168497]>
+CREATE OR REPLACE FUNCTION FormatTime
+(
+  inTime number
+) RETURN varchar2
+AS
+  v_Time number(10);
+  tValue number(4);
+  tStrTime varchar2(10);
+BEGIN
+  --RETURN TO_CHAR(ROUND(inTime, 2));
+  --对输入时间数据进行4舍5入处理
+  v_Time := ABS(inTime);
+  ......
+  RETURN tStrTime;
+
+END FormatTime;
+
+<[::语法::]>
+--带有IN参数的函数    
+create or replace function get_empname(v_id in number) return varchar2 as   
+  v_name varchar2(50);    
+begin   
+  select name into v_name from employee where id = v_id;    
+  return v_name;    
+exception    
+  when no_data_found then   
+    raise_application_error(-20001, '你输入的ID无效！');    
+end get_empname;  
+
+<[::语法::]>
+create or replace function myfunction return number
+is 
+ my_return_variable number;
+begin
+ select count(*) into my_return_variable from dept;
+ return my_return_variable;
+ end myfunction;
+(1) 如果函数没有参数，那么函数名后不应该要括号
+(2) 创建函数的时候end后面一定要记得写函数名 
+ 
+// 工具示例
+public final class SsocUtil
+{
+    private static final SsocUtil CU = new SsocUtil();
+    
+    private SsocUtil()
+    {
+        
+    }
+    
+    public static SsocUtil ins()
+    {
+        return CU;
+    }
+    
+    public boolean isNull(String str)
+    {
+        return (null == str || "".equals(str)) ? true : false;
+    }
+}
+
+// 页面加载执行
+showMore(); 
+// 显示隐藏的更多维度
+function showMore()	
