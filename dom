@@ -1,0 +1,218 @@
+
+什么是 [lamda] 表达式 >>> 
+<jdk5.0 --- jdk8.0 历次的新特性: 好好学习> 
+<[http://www.cnblogs.com/langtianya/p/3757993.html]>
+(input parameters) => expression
+int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+int oddNumbers = numbers.Count(n => n % 2 == 1);
+
+-- java 可变参数
+public static String format(String pattern, Object ... arguments) 
+{
+	MessageFormat temp = new MessageFormat(pattern);
+	return temp.format(arguments);
+}
+
+public Object clone() 
+{
+	MessageFormat other = (MessageFormat) super.clone();
+
+	// clone arrays. Can't do with utility because of bug in Cloneable
+	other.formats = (Format[]) formats.clone(); // shallow clone
+	for (int i = 0; i < formats.length; ++i) {
+		if (formats[i] != null)
+			other.formats[i] = (Format)formats[i].clone();
+	}
+	// for primitives or immutables, shallow clone is enough
+	other.offsets = (int[]) offsets.clone();
+	other.argumentNumbers = (int[]) argumentNumbers.clone();
+
+	return other;
+}
+
+-- com.opensymphony.xwork2.util.OgnlUtil
+private StringBuffer trimDot(StringBuffer sb)
+{
+	if(sb != null && sb.length() > 1)
+    sb = sb.delete(sb.length() - 1, sb.length());
+	return sb;
+}
+
+public static Locale getLocaleFromCookie()
+{
+	Locale locale = null;
+	Cookie cookies[] = ServletActionContext.getRequest().getCookies();
+    ......
+	if("bme_locale_session".equals(cookies[i].getName()))
+	{
+		locale = SystemUtil.getLocale(cookies[i].getValue());
+		break;
+	}
+    ......
+}
+
+在java中,方法的内部类可以访问方法中的局部变量,但必须用final修饰才能访问 >> [重要知识]
+
+问题1:上面的程序能否编译通过,如果不能,请说明理由:
+解答:不能编译通过,可能没有初始化变量a,因为对于final类型的成员变量的初始化,在构造方法中完成赋值,
+如果一个类有多个构造方法,就要保证在每个构造方法中都要完成对该final类型变量的初始化工作,所以需要
+在public FinalOriginalTest(String name)构造方法中给a赋值;
+
+注意：final可以用在类,方法,变量上
+1: final用在类上,表明当前类它不能被继承,没有子类
+2: final用在方法上,表明当前方法不能被override,不能被重写
+3: final用在变量上,表明当前变量是一个终态的变量,是一个常量,这个变量的值一但被赋值后就不能被改变了
+对于final类型的成员变量的初始化方式:
+1: 声明变量时直接赋值
+2: 在构造方法中完成赋值,如果一个类有多个构造方法,就要保证在每个构造方法中都要完成对该final类型变量的初始化工作
+
+问题2:上面的程序中,修正问题1之后,将private final int a;改为private static final int a;能否编译通过,如果不能,请说明理由
+解答:不能编译通过,因为a是静态变量,在这个类还没有实例化的时候,它的值就已经有了,所以对于一个int类型的static final类型的
+变量a来说,我们只能在声明的时候就给它赋值private static final int a = 3;然后把构造方法里面的赋值给注释掉,这样编译就能通
+过了,还可以在static{}这样的静态块中初始化它
+
+总结：对于final类型的变量,对于不加static我们可以有两种方式给它赋值:声明变量时直接赋值;在构造方法中完成赋值,如果一个类有
+多个构造方法,就要保证在每个构造方法中都要完成对该final类型变量的初始化工作,对于一个变量既是final又是static的,我们必须在
+声明变量时直接赋值
+
+final类 >> 声明为final的类不能派生出了子类,也就是不能被继承,一个final类中的所有方法都隐式地指定为final. 
+final数据 >>
+ 
+1.在修饰基本类型时,表示它是一个常量,在定义时必须给予赋值. 
+   特别的一个既是static又是final 的字段只占据一段不能改变的存储空间. 
+2.在修饰对象或者数组时,它表示对对象或数组的引用恒定不变,然而对象本身却是可以修改的. 
+  空白final:声明为final但末给定初值的字段,但必须确保空白final在使用前被初始化,一般在构造方法完成. 
+  final参数：在方法的参数列表以声明的方式将参数指明为final,这意味着在方法里无法修改参数的引用所指向的对象. 
+  
+create or replace view sdlt_bicprpt.t_c_ssoc_handledetail_rh as
+select a.SERIALNO, NVL(a.ISSATISFY,'-1') ISSATISFY from T_B_DLG_PBH_PROBLEMPROCESS a
+WHERE a.srtypeid LIKE '001%' OR a.SRTYPEID LIKE '046%' or a.srtypeid LIKE '011%';
+
+CREATE  OR  REPLACE  VIEW  dept_sum_vw  (name,minsal,maxsal,avgsal) 
+AS SELECT d.dname,min(e.sal),max(e.sal),avg(e.sal) 
+FROM   emp e,dept d 
+WHERE  e.deptno = d.deptno 
+GROUP  BY  d.dname; 
+
+ 视图是基于一个表或视图的逻辑表, 本身不包含数据, 通过它可以对表里的数据进行查询和修改,视图  
+基于的表称为基表, 视图是存储在数据字典里的一条 select 语句, 通过创建视图可以提取数据的逻辑
+上的集合或组合;
+ 
+视图的优点:
+1): 对数据库的访问, 因为视图可以有选择性的选取数据库里的一部分;
+2): 用户通过简单的查询可以从复杂查询中获得到结果;
+3): 维护数据的独立性,视图可以从多个表检索数据;
+4): 对于相同的数据可以产生不同的视图
+  
+两者区别如下： 
+1.简单视图只从单表里获取数据,复杂视图从多表获取数据 
+2.简单视图不包含函数和数据组,复杂视图包含 
+3.简单视图可以实现DML操作,复杂视图不可以  
+  
+CREATE [OR REPLACE] [FORCE|NOFORCE] VIEW view_name [(alias[, alias]...)] 
+AS subquery  [WITH CHECK OPTION [CONSTRAINT constraint]]  [WITH READ ONLY] 
+
+其中： >>>>>   
+OR REPLACE：若所创建的试图已经存在,ORACLE自动重建该视图 
+FORCE：不管基表是否存在ORACLE都会自动创建该视图 
+NOFORCE：只有基表都存在ORACLE才会创建该视图 
+alias：为视图产生的列定义的别名 
+subquery：一条完整的SELECT语句，可以在该语句中定义别名 
+WITH CHECK OPTION ： 插入或修改的数据行必须满足视图定义的约束 
+WITH READ ONLY ： 该视图上不能进行任何DML操作 
+  
+视图上的 DML 操作: <若干原则:重要知识点;>
+1): 简单视图可以执行 DML 操作;
+2): 在视图包含 GROUP 函数, group by字句的时候, distinct关键字时不能删除数据行;
+3): 在视图不出现下列情况时候可以通过视图修改基表数据或插入数据:  
+  
+a. 视图中包含GROUP 函数,GROUP BY子句,DISTINCT关键字； 
+b. 使用表达式定义的列； (*****)
+c. ROWNUM伪列 
+d.基表中未在视图中选择的其他列定义为非空且无默认值 
+<[ WITH CHECK OPTION 子句 ]>
+<[ http://tianwei0131-163-com.iteye.com/blog/1146722 ]>
+通过视图执行的INSERTS和UPDATES操作不能创建该视图检索不到的数据行,
+因为它会对插入或修改的数据行执行完整性约束和数据有效性检查
+也就是说在执行INSERTS,UPDATES时,WHERE条件中除需要INSERT,UPDATE本
+身的限制条件之外,还需要加上视图创建时的WHERE条件   
+  
+1: 视图上是否可以创建索引 
+一般视图上不用建立索引,对视图的操作最终会转化为对表的操作  
+
+There's gotta be a reason 
+principle n.原则,原理; 准则,道义; 道德标准; 本能; 
+protocol n.礼仪;(数据传递的)协议;
+
+That's it? Such a trivial issue?. >> [脆未哦]
+就这样,就这么一个简单的问题
+adj.琐碎的,无价值的; 平常的,平凡的; 不重要的
+
+<bme:column css="crm_row_${itemidx%2==0?'odd':'even'}" label="办结时间" width="62px">
+	<bme:label value="${fn:substring(ARCHIVEDATE_D,0,fn:indexOf(ARCHIVEDATE_D,'.'))}"></bme:label>
+</bme:column>
+jquery + OGNL <[]>
+
+JXL(JXLS)的使用: java中操作Excel的解决方案之一 >> 
+Java应用来处理Excel数据表,因为它是使用Java编写的,所以我们在Web应用中可以通过JSP,
+Servlet来调用API实现对Excel数据表的访问;Java Excel API的jar包可以通过以下URL获得：
+http://sourceforge.net/projects/jexcelapi/files/jexcelapi/2.6.6/jexcelapi_2_6_6.zip/download
+http://sourceforge.net/projects/jexcelapi/files/
+http://nchc.dl.sourceforge.net/project/jexcelapi/jexcelapi/2.6.6/jexcelapi_2_6_6.zip 
+将下载后的文件解包,得到jxl.jar(版本为0.9.6时，需导入jxls-core-0.9.6.jar和jxls-reader-0.9.6.jar)
+
+<[http://www.cnblogs.com/kissdodog/archive/2012/12/25/2833213.html]>
+document.getElementById()    根据Id获取元素节点
+var str = document.getElementById("p1").innerHTML;
+document.getElementsByName()    根据name获取元素节点
+var username = document.getElementsByName("userName")[0].value;
+document.getElementsByTagName()  
+var str = document.getElementsByTagName("p")[1].innerHTML;
+document.getElementsByClassName()    根据class获取元素节点
+var node = document.getElementsByClassName("class1")[0];
+document.querySelector()    //根据CSS选择器的规则，返回第一个匹配到的元素
+document.querySelectorAll()    //根据CSS选择器的规则，返回所有匹配到的元素
+var node = document.querySelector("#div1 > p");  
+var node1 = document.querySelector(".class2");
+var nodelist = document.querySelectorAll("p");
+alert(nodelist[0].innerHTML + " - " + nodelist[1].innerHTML);
+
+文档结构和遍历
+(1)作为节点数的文档
+1、parentNode    获取该节点的父节点    
+2、childNodes    获取该节点的子节点数组
+3、firstChild    获取该节点的第一个子节点
+4、lastChild    获取该节点的最后一个子节点
+5、nextSibling  获取该节点的下一个兄弟元素
+6、previoursSibling  获取该节点的上一个兄弟元素
+7、nodeType  节点的类型,9代表Document节点,1代表Element节点,3代表Text节点,8代表Comment节点,11代表DocumentFragment节点
+8、nodeVlue  Text节点或Comment节点的文本内容
+9、nodeName  元素的标签名(如P,SPAN,#text(文本节点),DIV),以大写形式表示
+
+(2)作为元素树的文档
+1、firstElementChild        第一个子元素节点
+2、lastElementChild        最后一个子元素节点
+3、nextElementSibling        下一个兄弟元素节点
+4、previousElementSibling    前一个兄弟元素节点
+5、childElementCount        子元素节点个数量
+
+document.getElementById("img1").src = "1small.jpg"; 
+getAttribute();  //注意这两个方法是不必理会javascript保留字的，HTML属性是什么就怎么写。
+setAttribute();
+1、innerText | textContent    
+2、innerHTML
+1、document.createTextNode() //创建一个文本节点
+var textNode = document.createTextNode("<p>我是一个javascript新建的节点</p>");
+document.getElementById("div1").appendChild(textNode);
+document.createElement() //创建一个元素节点
+var pNode = document.createElement("p");
+pNode.textContent = "新建一个P节点";
+document.getElementById("div1").appendChild(pNode);
+appendChild()    //将一个节点插入到调用节点的最后面
+insertBefore()    //接受两个参数,第一个为待插入的节点,第二个指明在哪个节点前面,如果不传入第二个参数,则跟appendChild一样
+1、removeChild(); 由父元素调用,删除一个子节点,注意是直接父元素调用,删除直接子元素才有效,删除孙子元素就没有效果了
+2、replaceChild()    //删除一个子节点，并用一个新节点代替它，第一个参数为新建的节点，第二个节点为被替换的节点
+通过元素的style属性可以随意读取和设置元素的CSS样式
+document.getElementById("div1").style.backgroundColor = "yellow";
+http://www.cnblogs.com/kissdodog/archive/2012/12/25/2833213.html
+
