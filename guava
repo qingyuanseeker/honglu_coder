@@ -1,0 +1,215 @@
+package com.qingyuan.proxy;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+// google gson是一个非常轻量的 java 对象与json相互转化工具   
+// http://my.oschina.net/leejun2005/blog/172328
+// http://ifeve.com/google-guava-collectionutilities/
+// alias showlog='du -sk *|sort -n'
+// Java Exception 捕获和展示 >> new ByteArrayOutputStream();  
+// http://blog.csdn.net/hongweigg/article/details/18313461
+// learn:<[FileUtils/IOUtils :http://www.cnblogs.com/jackyrong/archive/2006/10/15/529599.html]>
+public class ExceptionHandler
+{
+    public static void main(String[] args)
+    {
+    /*哈希算法也称为散列算法，是将数据依特定算法直接指定到一个地址上 >> eqauls() 和 hashCode()
+    这样一来，当集合要添加新的元素时,先调用这个元素的hashCode方法,就一下子能定位到它应该放置的物理位置上,
+    如果这个位置上没有元素,它就可以直接存储在这个位置上,不用再进行任何比较了；如果这个位置上已经有元素了, 
+    就调用它的equals方法与新元素进行比较,相同的话就不存了,不相同就散列其它的地址,所以这里存在一个冲突解
+    决的问题,这样一来实际调用equals方法的次数就大大降低了,几乎只需要一两次 */
+        try
+        {
+            throw new NullPointerException();   
+        } 
+        catch (Exception e) 
+        {
+            // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数timerBegin;行数65
+            // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数main;行数24
+            exceptionToString(new NullPointerException());
+        }
+        finally
+        {
+            // 类名： com.qingyuan.proxy.ExceptionHandler; 方法名:main;
+            // 这里打印的主调用函数的方法名
+            timerBegin();
+        }
+        
+    }
+    
+    public static String exceptionToString(Exception e)
+    {  
+        if(e == null)  
+        {
+            return null;   
+        }
+
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+
+        try 
+        {
+            // Java IO 装饰模式
+            e.printStackTrace(new PrintStream(baos));  
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        String result = "";
+        if(!"".equals(baos.toString()))
+        {
+            result = baos.toString().substring(0, baos.toString().indexOf("Exception") + "Exception".length());
+            //System.out.println(baos.toString().substring(0, baos.toString().indexOf("Exception")+9));
+            //String[] str = baos.toString().split(":");
+            //result = str[0];
+        }
+        
+        System.out.println(result);
+        return result;  
+
+     } 
+    
+	private static int hash(int h) 
+	{
+        // Spread bits to regularize both segment and index locations,
+        // using variant of single-word Wang/Jenkins hash.
+        h += (h <<  15) ^ 0xffffcd7d;
+        h ^= (h >>> 10);
+        h += (h <<   3);
+        h ^= (h >>>  6);
+        h += (h <<   2) + (h << 14);
+        return h ^ (h >>> 16);
+    }
+	
+    public void exceptionRecord()
+    {
+        try 
+        {
+            FileInputStream fis = new FileInputStream("d:\\test.txt");
+            fis.read();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            System.out.println("exception:" + exception);
+        }
+    }
+    
+	/* e.printStackTrace();
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    e.printStackTrace(new PrintStream(baos));
+    String exception = baos.toString();*/
+    public static void useByteArray()
+    {
+        int a =0, b = 1, c = 2;
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        bout.write(a); bout.write(b); bout.write(c);
+        byte[] buff = bout.toByteArray();
+        /*for (byte bt: buff)
+        {
+            System.out.println(bt); 
+        }*/
+        ByteArrayInputStream bin = new ByteArrayInputStream(buff);
+        while ((b = bin.read()) != -1) 
+        { 
+            System.out.print(b); 
+        } 
+    }
+    
+    // DataOutputStream & ByteArrayInputStream
+    public static void useDataStream() throws IOException 
+    { 
+        ByteArrayOutputStream bout = new ByteArrayOutputStream(); 
+        DataOutputStream dout = new DataOutputStream(bout); 
+        String name = "xxy"; 
+        int age = 84; 
+        dout.writeUTF(name); 
+        dout.writeInt(age); 
+        byte[] buff = bout.toByteArray(); 
+        ByteArrayInputStream bin = new ByteArrayInputStream(buff); 
+        DataInputStream dis = new DataInputStream(bin); 
+        String newName = dis.readUTF(); 
+        int newAge = dis.readInt(); 
+        System.out.println(newName + ":" + newAge); 
+    } 
+	
+    public static String timerBegin()
+    {
+        String serial = "";
+        try
+        {
+            // 函数调用栈结构层次
+            StackTraceElement[] stacks = new Throwable().getStackTrace();   
+            for (StackTraceElement se: stacks)
+            { 
+                // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数timerBegin;行数53
+                // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数main;行数14
+                System.out.println("类名:" + se.getClassName() + ";所在的函数" + se.getMethodName() + 
+                ";行数" + se.getLineNumber());
+            }
+            
+            String className = stacks[1].getClassName();
+            String methodName = stacks[1].getMethodName();
+            // String _methodName =  new Exception().getStackTrace()[1].getMethodName();// 获得调用者的方法名   
+            // String _thisMethodName = new Exception().getStackTrace()[0].getMethodName();// 获得当前的方法名
+            InetAddress localhost = null;
+            String ipaddress = "";
+            
+            try 
+            {
+                localhost = InetAddress.getLocalHost();
+                ipaddress = localhost.getHostAddress();
+            } 
+            catch (UnknownHostException e) 
+            {
+                e.printStackTrace();
+            } 
+            
+            System.out.println("类名： " + className + "; 方法名:" + methodName + ";主机:" + localhost + ";IP:" + ipaddress);
+           
+        }
+        catch (RuntimeException e)
+        {
+            
+            e.printStackTrace();
+        }
+       return serial;
+    }
+}
+
+rem : delete serser session before startup csp 
+rem : config your here 
+rem : for example set diretory = D:\csp-tomcat-6.0.35\work\Catalina\localhost
+rem set /p var= D:\csp-tomcat-6.0.35\work\Catalina;
+rem :此两种是删除前进行询问删除包括目标目录在内的所有内容 
+cd /d D:\OpenAS_Tomcat7\work\Catalina
+rd /s localhost
+pause
+
+--------------------------------------------------------------------------------
+
+echo off
+REM open file using specified editable tool
+cd /d C:\Program Files\UltraEdit\
+Uedit32.exe D:\OpenAS_Tomcat7\conf\server.xml
+pause
+exit
+
+C:\Program Files\SourceMonitor\SourceMonitor.exe
+/DJava ${container_loc}/${resource_name}
+eclipse >> run >> external tool >> open external tool dialog >> configHere
+
+SMART原则 >>:
+S --目标必须是具体的明确的Specific
+M --目标必须是可以衡量的Measurable 
+A --目标必须是可以达到的Attainable
+R --目标必须是实际的且与其他目标具有相关性Relevant 
+T --目标必须具有明确的截止期限Time-based 
