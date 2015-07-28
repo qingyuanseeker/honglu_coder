@@ -1,0 +1,357 @@
+
+ORACLE编程规范_百度文库
+Oracle SQL性能优化
+sun推荐的Java编码规范.doc
+
+JSTL & OGNL >>> CORE[jstl in action]
+
+automobile industries 
+Office Automation,简称OA
+n.体积; 卷; 音量; 量,大量;  >> Volume
+n.大量,大多; 块,堆，团; [物理学]质量 >> mass
+[::总结C语言与java的栈数据结构::]
+http://blog.csdn.net/hguisu/article/details/7674195
+http://www.cnblogs.com/ruofengzhishang/articles/1939444.html
+
+Struts2之自定义类型转换器 >> [::重要知识点,要总结::]
+Struts2自定义类型转换器分为局部类型转换器和全局类型转换器
+
+使用token标签的时候,Struts2会建立一个GUID全局唯一的字符串,放在session中
+并且会成为一个hidden放在form中,struts2 避免表单重复提交的方法:
+<action name="userRegister" class="UserRegisterAction">      
+<interceptor-ref name="defaultStack" />      
+<interceptor-ref name="token" />   
+step 1:在<form>标签里面定义标签<s:token/>
+step 2:在struts.xml文件内配置token拦截器
+<interceptor-ref name="token">
+
+使用<fmt>标签应先导入
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${currentTimeStamp}"/> <br/>
+<fmt:formatNumber value="12" type="currency" pattern="$.#"/> <br/>
+DecimalFormat df = new DecimalFormat("格式");
+String fmt =df.format(double);
+
+// value="${fn:substring(ARCHIVEDATE_D,0,fn:indexOf(ARCHIVEDATE_D,'.'))}"
+首先,我们要在页面的最上方引用:[寄存环境,EL 表达式内]
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+fn:contains(string, substring)
+<c:if test="${fn:contain(name, searchString)}">
+fn:containsIgnoreCase(string, substring)
+<c:if test="${fn:containsIgnoreCase(name,searchString)}">
+fn:endsWith(String, suffix)
+<c:if test="${fn:endsWith(filename, ".txt")}">
+fn:escapeXml(string)
+例如：<字符应该转为&lt; ${fn:escapeXml(param:info)}
+fn:trim(string) 
+${fn.trim(name)}
+fn:toUpperCase(string) 
+${fn.UpperCase(product.name)}
+fn:toLowerCase(string) 
+${fn.toLowerCase(product.name)}
+fn:substringBefore(string, substring)
+${fn:substringBefore(zip, "-")}
+fn:substringAfter(string, substring)
+${fn:substringAfter(zip, "-")} 
+fn:substring(string, begin, end) 
+${fn:substring(zip, 6, -1)}
+fn:startsWith(string, prefix) 
+fn:startsWith(string, prefix) 
+<c:if test="${fn:startsWith(product.id, "100-")}">
+fn:split(string, separator) 
+${fn:split(customerNames, ";")}
+fn:replace(string, before, after) 
+${fn:replace(text, "-", "&#149;")}
+fn:length(item) 
+${fn:length(shoppingCart.products)}
+fn:join(array, separator) 
+${fn:join(array, ";")}
+fn:indexOf(string, substring) 
+${fn:indexOf(name, "-")}
+
+下面是一个在页面显示时超过100个字符以后用......代替的方法::
+<c:set var="testStr" value="${analyze.command}" />
+<c:choose>
+   <c:when test="${fn:length(testStr) > 100}" >
+		<c:out value="${fn:substring(testStr, 0, 100)}" />
+   </c:when>
+   <c:otherwise>
+		<c:out value="${testStr}" />
+   </c:otherwise>
+</c:choose>
+
+struts2 属性驱动与模型驱动: Driver:
+struts2 与 struts2 很大的不同点在于,struts的execute方法提供了HttpServletRequest和
+HttpServletResponse 方法在获取客户端提交的数据信息的时候需要使用使用HttpServletRequest的
+getParameter()方法,并且还需要进行必要的数据类型转换,如何客户端提交的数据量大的时候,我们则
+需要写很多的getParameter方法,这样代码量就相应的增加不少,但是struts2为我们提供了属性驱动和
+模型驱动,它不需要我们写很多的获取值的方法,而只需要我们在Action中定义相应的getter方法,在界
+面上以Action中的变量名作为表单元素的name属性值即可
+
+>> ModelDrive &　AttributionDriver
+1.属性驱动
+对于属性驱动,我们需要在Action中定义与表单元素对应的所有的属性,因而在Action中会出现很多的
+getter和setter方法
+
+2.模型驱动
+对于模型驱动,使用的Action对象需要实现ModelDriven接口并给定所需要的类型,而在Action中我们只需
+要定义一个封装所有数据信息的javabean;
+
+3.属性和模型驱动的相同点<::驱动协议::>
+当我们使用属性驱动和模型驱动的时候,必须将表单的元素中的name属性值与我们定义接收数据信息的变量
+名对应起来。
+public class GetFieldAction extends ActionSupport 
+模型驱动有三点不同 ******** BME >> 框架一般会对此三点内容做进一步的封装
+1.所属的Action需要实现ModelDriven接口,并且给定类型和实现接口中的getModel方法
+2.需要一个封装所有属性的javabean
+3.在struts.xml文件中描述此Action的地方让该Action实现一个拦截器(ModelDrivenInterceptor)
+public class RegisterAction extends ActionSupport implements  ModelDriven<Person> 
+<action name="register"class="org.viancent.action.RegisterAction">
+	<result name="success">/result.jsp</result>
+	<result name="input">/show.jsp</result>
+	<interceptor-ref name="modelDriven"></interceptor-ref>
+	<interceptor-ref name="defaultStack"></interceptor-ref>
+</action>
+
+ognl = object-graph navigation language 对象图形化导航语言,
+1) 支持对象方法调用
+2) 支持类静态的方法调用和值访问,表达式的格式为:：
+@java.lang.String@format('foo%s','bar')
+3) 支持赋值操作和表达式串联
+4) 访问ognl 上下文 ognl context 与 ActionContext
+5) 操作集合对象
+ValueStack | ValueStack内存图 | ValueStack的组织结构
+1) ValueStack 是一个接口,在struts2 中使用ognl表达式实际上是使用ValueStack接口的类
+   OgnlValueStack,这个类是OgnlValueStack的基础;
+2) ValueStack 贯穿整个action的生命周期,每一个action实例都拥有一个ValueStack对象,其中
+   保存了当前 action 对象和其它相关的对象;
+3) struts2 把ValueStack 对象保存在名为struts.valueStack 的request 域中;
+2. 当struts2接受一个请求时,会迅速创建ActionContext,ValueStack,action,然后把action压入
+   到值栈中,所以action的实例变量可以被ognl访问,所以利用ognl表达式可以访问action
+1.调用map：
+ActionContext.getContext().put(k,v);//将一组对象存入map
+ActionContext.getContext().get(k);//通过key拿到value
+2.调用对象栈：
+ActionContext.getContext().getValueStack().push(obj);//将obj放到栈顶
+ActionContext.getContext().getValueStack().pop();//拿到栈顶对象
+
+<[开源中国:]>
+http://www.oschina.net/search?scope=blog&q=struts2+%E6%A0%87%E7%AD%BE
+http://blog.csdn.net/v123411739/article/details/24052989
+http://www.open-open.com/lib/view/open1331471894062.html
+http://commons.apache.org/proper/commons-ognl/language-guide.html
+<[-- 数学函数,日期函数比例较大,to_number,to_date,to_char --]>
+
+ASCII 
+返回与指定的字符对应的十进制数; 
+
+CHR 
+给出整数,返回对应的字符; 
+
+CONCAT 
+连接两个字符串; 
+
+INITCAP 
+返回字符串并将字符串的第一个字母变为大写; 
+
+INSTR(C1,C2,I,J) 
+在一个字符串中搜索指定的字符,返回发现指定的字符的位置; 
+
+LENGTH 
+返回字符串的长度; 
+
+LOWER 
+返回字符串,并将所有的字符小写 
+
+UPPER 
+返回字符串,并将所有的字符大写
+ 
+RPAD和LPAD(粘贴字符)
+RPAD 在列的右边粘贴字符 
+LPAD 在列的左边粘贴字符 
+
+LTRIM和RTRIM 
+LTRIM 删除左边出现的字符串 
+RTRIM 删除右边出现的字符串 
+
+SUBSTR(string,start,count) 
+取子字符串,从start开始,取count个
+
+REPLACE(string,s1,s2) 
+string 希望被替换的字符或变量 
+s1 被替换的字符串 
+s2 要替换的字符串
+ 
+ABS 
+返回指定值的绝对值
+ 
+CEIL 
+返回大于或等于给出数字的最小整数 
+
+FLOOR 
+对给定的数字取整数 
+
+MOD(n1,n2) 
+返回一个n1除以n2的余数
+
+ROUND和TRUNC 
+按照指定的精度进行舍入 
+
+SQRT 
+返回数字n的根 
+
+TRUNC 
+按照指定的精度截取一个数
+ 
+ADD_MONTHS 
+增加或减去月份
+
+LAST_DAY 
+返回日期的最后一天 
+MONTHS_BETWEEN(date2,date1) 
+给出date2-date1的月份 
+
+NEW_TIME(date,this,that) 
+给出在this时区=other时区的日期和时间 
+
+NEXT_DAY(date,day) 
+给出日期date和星期x之后计算下一个星期的日期
+
+SYSDATE 
+用来得到系统的当前日期 
+
+CHARTOROWID 
+将字符数据类型转换为ROWID类型
+
+TO_CHAR(date,format) 
+SQL> select to_char(sysdate,yyyy/mm/dd hh24:mi:ss) from dual; 
+
+TO_DATE(string,format) 
+将字符串转化为ORACLE中的一个日期 
+
+TO_NUMBER 
+将给出的字符转换为数字 
+
+GREATEST 
+返回一组表达式中的最大值,即比较字符的编码大小. 
+
+LEAST 
+返回一组表达式中的最小值
+
+USER 
+返回当前用户的名字 
+
+USEREVN 
+返回当前用户环境的信息,opt可以是:
+ENTRYID,SESSIONID,TERMINAL,ISDBA,LABLE,LANGUAGE,CLIENT_INFO,LANG,VSIZE 
+ISDBA 查看当前用户是否是 DBA 如果是则返回true
+SQL> select userenv('isdba') from dual; 
+SQL> select userenv('SESSIONID') from dual; 
+
+AVG(DISTINCT|ALL) [这里可以带参数]
+all表示对所有的值求平均值,distinct只对不同的值求平均值 
+select avg(distinct sal) from gao.table; 
+
+MAX(DISTINCT|ALL) 
+求最大值,ALL表示对所有的值求最大值,DISTINCT表示对不同的值求最大值,相同的只取一次 
+
+MIN(DISTINCT|ALL) 
+求最小值,ALL表示对所有的值求最小值,DISTINCT表示对不同的值求最小值,相同的只取一次 
+MIN(DISTINCT|ALL) 
+求最小值,ALL表示对所有的值求最小值,DISTINCT表示对不同的值求最小值,相同的只取一次 
+
+VARIANCE(DISTINCT|ALL) 
+求协方差 
+
+GROUP BY 
+主要用来对一组数进行统计 
+
+HAVING 
+对分组统计再加限制条件 
+
+ORDER BY 
+用于对查询到的结果进行排序输出 
+NVL(expr1, expr2) 
+NVL(expr1, expr2)->expr1为NULL.返回expr2；不为NULL.返回expr1.注意两者的类型要一致 
+NVL2(expr1, expr2, expr3) ->expr1不为NULL.返回expr2；为NULL.返回expr3
+常用的分析函数如下所列: 
+row_number() over(partition by ... order by ...) 
+rank() over(partition by ... order by ...) 
+dense_rank() over(partition by ... order by ...) 
+count() over(partition by ... order by ...) 
+max() over(partition by ... order by ...) 
+min() over(partition by ... order by ...) 
+sum() over(partition by ... order by ...) 
+avg() over(partition by ... order by ...) 
+first_value() over(partition by ... order by ...) 
+last_value() over(partition by ... order by ...) 
+lag() over(partition by ... order by ...) 
+lead() over(partition by ... order by ...) 
+
+COVAR_POP 
+功能描述：返回一对表达式的总体协方差
+
+COVAR_SAMP 
+功能描述：返回一对表达式的样本协方差 
+
+COUNT 
+功能描述：对一组内发生的事情进行累积计数.如果指定*或一些非空常数.count将对所有行计数.
+如果指定一个表达式.count 返回表达式非空赋值的计数.当有相同值出现时.这些相等的值都会被
+纳入被计算的值；可以使用DISTINCT来记录去掉一组中完全相同的数据后出现的行数
+
+STDDEV_POP 
+功能描述：该函数计算总体标准偏离.并返回总体变量的平方根.其返回值与VAR_POP函数的平方根相同.
+Standard Deviation－Population
+
+STDDEV_SAMP
+功能描述：该函数计算累积样本标准偏离.并返回总体变量的平方根.其返回值与VAR_POP函数的平方
+根相同.Standard Deviation－Sample
+
+SUM 
+功能描述:该函数计算组中表达式的累积和. 
+
+RANK 
+功能描述:根据ORDER BY子句中表达式的值.从查询返回的每一行.计算它们与其它行的相对位置
+
+set echo off; // 显示start启动的脚本中的每个sql命令，缺省为on 
+set echo on   // 设置运行命令是是否显示语句 
+set feedback on; // 设置显示“已选择XX行” 
+set feedback off; // 回显本次sql命令处理的记录条数，缺省为on即去掉最后的 "已经选择10000行" 
+set heading off; // 输出域标题，缺省为on 设置为off就去掉了select结果的字段名，只显示数据 
+set pagesize 0; // 输出每页行数，缺省为24,为了避免分页，可设定为0。 
+set linesize 80; // 输出一行字符个数，缺省为80 
+set numwidth 12; // 输出number类型域长度，缺省为10 
+set termout off; // 显示脚本中的命令的执行结果，缺省为on 
+set trimout on; // 去除标准输出每行的拖尾空格，缺省为off 
+set trimspool on; // 去除重定向（spool）输出每行的拖尾空格，缺省为off 
+set serveroutput on; // 设置允许显示输出类似dbms_output 
+set timing on; // 设置显示“已用时间：XXXX” 
+set autotrace on-; // 设置允许对执行的sql进行分析
+set define off // 关闭替代变量功能 
+set define on  // 开启替代变量功能 
+
+查看被锁的表 
+select b.owner,b.object_name,l.session_id,l.locked_mode,l.OS_USER_NAME from v$locked_object l, 
+dba_objects b where b.object_id=l.object_id;
+
+查看连接的进程 
+SELECT sid, serial#, username, osuser FROM v$session; 
+SELECT sid,user#,lockwait,schemaname,machine,program, serial#, username, osuser FROM v$session Order By osuser; 
+杀掉进程 
+alter system kill session 'sid,serial#'; 
+
+delete 和 truncate table 的区别  
+1. delete是DML，truncate是DDL (DML可以rollback，DDL不可以)  
+2. delete逐条删除；truncate先摧毁，再重建  
+3. delet会产生碎片；truncate不会  
+4. delete不会释放空间；truncate会  
+
+Oracle中的事务 [transaction] >>> 
+1. 事务的起始标志: DML语句  
+2. 事务的结束标志: 提交: 显式提交 commit  
+>> 隐式提交  
+>> DDL 语句,正常退出 exit  
+>> 回滚: 
+>> 显式 rollback  
+>> 隐式 非正常退出,掉电,宕机 
+
