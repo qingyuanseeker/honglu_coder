@@ -1,0 +1,72 @@
+
+// 熟悉主流服务器配置和开发; 有较强的SQL编写能力
+// UML Visio ,Rational Rose, PowerDesign, Dreamweaver
+安装oracle时系统没有添加 环境变量,你自己手动添加F:\Oracle\product\10.1.0\Client_1\bin
+到系统环境变量 path里面就可以用这个命令了.
+
+测试数据库服务的命令：
+控制台 tnsping命令 IP地址 端口号 数据库服务名称
+cmd->tnsping 192.168.1.123:1521/oracle10g
+
+1:G:\Oracle\product\10.1.0\Client_1\NETWORK\ADMIN目录下有个tnsname.ora文件，内容如下：
+xiangmeng=
+(DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST= 10.176.111.40)(PORT = 1521))
+    (CONNECT_DATA =
+        (SERVER = DEDICATED)
+        (SERVICE_NAME = ora11g)
+    )
+)
+其中：xiangmeng为数据库名,HOST为IP地址,所以可以仿效上面的例子手动添加数据录连接
+2：用cmd进入命令行输入：tnsping cmstar,就是测试172.18.13.200是否连接成功
+3：导入与导出,如下：
+
+数据导出：
+1 将数据库TEST完全导出,用户名system 密码manager 导出到D:\daochu.dmp中
+exp system/manager@TEST file=d:\daochu.dmp full=y
+2 将数据库中system用户与sys用户的表导出
+exp system/manager@TEST file=d:\daochu.dmp owner=(system,sys)
+3 将数据库中的表table1 、table2导出
+exp system/manager@TEST file=d:\daochu.dmp tables=(table1,table2) 
+4 将数据库中的表table1中的字段filed1以"00"打头的数据导出
+exp system/manager@TEST file=d:\daochu.dmp tables=(table1) query=\" where filed1 like '00%'\"
+   
+上面是常用的导出,用winzip把dmp文件可以很好的压缩,不过在上面命令后面 加上 compress=y 就可以了 
+数据的导入
+1 将D:\daochu.dmp 中的数据导入 TEST数据库中。
+imp system/manager@TEST  file=d:\daochu.dmp
+上面可能有点问题,因为有的表已经存在,然后它就报错,对该表就不进行导入,在后面加上 ignore=y 就可以了
+2 将d:\daochu.dmp中的表table1 导入
+imp system/manager@TEST  file=d:\daochu.dmp  tables=(table1) 
+注意事项:导出dmp数据时需要有导出表的权限的用户,否则不能导出
+
+Oracle Instant Client即时客户端 >> 安装与配置 >>
+
+在"环境变量"的"系统变量"中增加：
+1.ORACLE_HOME = C:\instantclient_11_2
+2.TNS_ADMIN = C:\instantclient_11_2
+3.NLS_LANG = SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+修改Path变量,在后面添加 C:\instantclient_11_2
+可以安装Toad或者PL/SQL Developer工具,不需要再额外进行任何设置,即可使用[::之间是有协议的::]
+tools-->preferences-->logon history-->store whith password
+
+流程是一套框架,对外提供一系列接口,提供给开发人员是实现具体的功能:
+ a 活动 activity / 阶段 node
+ b 流转 transition / 连线
+ c 事件
+a) 一般情况一个活动中可以指定一个或多个Transition
+b) 如果Transition只有一个,则可以不指定名称名称是null,如果有多个,则要分别指定唯一的名称
+
+task任务活动-->个人任务的分配
+1. 使用流程变量：assignee="#{manager}"
+2. AssignmentHandler：assignable.setAssignee(userId); // 指定当前任务的办理人(分配任务)
+
+预定义节点:
+start-state: 开始节点：标识流程开始
+end- state: 结束节点：标识流程结束
+task-node: 任务节点：可以放0个或多个任务
+decision: 决策节点：路径选择.只使用一个流转
+fork/join: 分支节点/合并节点：可以分为多个并行执行的分支
+
+state,状态节点,等待:
+>> 总结:还有mail-node, process-state, super-state等
