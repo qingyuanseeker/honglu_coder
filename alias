@@ -1,0 +1,69 @@
+
+java 移位运算
+java 注解 <注解Annotation 自定义注解入门>
+java 新特性 ...... 
+java 动态代理 <java动态代理JDK和cglib>
+java 深浅拷贝
+java 单例模式和装饰模式
+java 多维数组
+
+// <[http://rednaxelafx.iteye.com/blog/1050144]>
+int[][][] a = new int[2][][];
+for (int i = 0; i < a.length; i++) {
+  a[i] = new int[3][];
+  for (int j = 0; j < a[i].length; j++) {
+    a[i][j] = new int[4];
+  }
+}
+
+// <[在 windows 环境下注册动态链接库文件 >> regsvr32.exe]>
+在windows操作系统中有一些文件是以dll作为后缀的.其作用就是为应用软件提供底层支持.这些dll文件称之为动态链接库
+对于dll文件故障.可以通过regsvr32.exe程序进行逐个修复.比如IE浏览器故障的时候.可以通过使用Regsvr32命令来修复.
+在cmd命令行中输入regsvr32 actxprxy.dll .就可以重新注册 actxprxy.dll文件了.
+那么如何对系统中所有的dll文件进行批量修复了.打开记事本.在其中写一段代码.
+for %1 in (%windir%\system32\*.dll) do regsvr32.exe /s %1 
+将该记事本文件保存为修复dll.bat的文件.此时在桌面上就可以看到该bat文件了.
+点击执行该bat文件.就可以对dll文件进行批量修复了.
+
+$ git clone git://github.com/jquery/jquery.git
+Cloning into 'jquery'...
+
+启动环境：>> startxmb;showlog 或者 all
+set EXECUTABLE=%CATALINA_HOME%\bin\catalina.bat
+call "%EXECUTABLE%" run %CMD_LINE_ARGS%
+
+1、临时别名>>只在当前终端命令窗口中有效
+2、永久的别名>>在所有的终端命令窗口中都有效[::一般有root权限::]
+输入命令 "alias" 可以查看当前系统已经定义了哪些别名
+
+在账户根目录下有.bashrc文件 >> root用户：/root/.bashrc
+
+现在我们要做的数在定义永久别名的文件里面加入我们自己要设置的永久别名,这个文件是我们自己根目录下的 
+.bashrc 文件,输入命令 gedit .bashrc来打开.bashrc 文件
+
+.bashrc 文件打开后,这个文件是关于一些系统变量,别名等的定义文件,要添加的别名也可以在这个文件里面添加
+当然也可以添加在别的文件里面
+vi ~/.bashrc把你的alias添加进去,比如alias vi=vim
+
+suse104 /home/xmb_sxc04> alias
+all      stopxmb;startxmb;showlog;
+stopxmb  cd /home/xmb_sxc04/xbc_xmb/bin; ./clearall.sh
+startxmb cd /home/xmb_sxc04/xbc_xmb/bin; ./startup.sh ; rm -rf /home/xmb_s 
+showlog  tail -f  /home/xmb_sxc04/xbc_xmb/logs/tomcatconsole.log   
+bin      cd /home/xmb_sxc04/xbc_xmb/bin
+conf     cd /home/xmb_sxc04/xbc_xmb/webapps/xmb/WEB-INF/conf
+crp      cd /home/xmb_sxc04/xbc_xmb/bin; sh crp.sh
+xmb      cd /home/xmb_sxc04/xbc_xmb/webapps/xmb
+jdbc     cd /home/xmb_sxc04/xbc_xmb/webapps/xmb/WEB-INF/classes
+lib      cd /home/xmb_sxc04/xbc_xmb/webapps/xmb/WEB-INF/lib
+log      cd /home/xmb_sxc04/xbc_xmb/bin/local                                                                                                                                                                                                                                                                                                                                        
+startw   cd /home/xmb_sxc04/xbc_xmb/bin; sh startwtomcat.sh
+stopw    cd /home/xmb_sxc04/xbc_xmb/bin; ./wtomcat.csh stop &
+tomconf  cd /home/xmb_sxc04/xbc_xmb/conf
+tomlog   cd /home/xmb_sxc04/xbc_xmb/logs
+
+# There are 3 different types of shells in bash: the login shell, normal shell
+# and interactive shell. Login shells read ~/.profile and interactive shells
+# read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
+# settings made here will also take effect in a login shell.
+
