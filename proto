@@ -1,0 +1,80 @@
+
+网络协议要素：
+语法,即数据与控制信息的结构或格式
+语义,即需要发出何种控制信息,完成何种动作以及做出何种响应
+时序,即事件实现顺序的详细说明
+
+tcp/ip协议族中包括上百个互为关联的协议,不同功能的协议分布在不同的协议层, 几个常用协议如下： 
+1、telnet（remote login）：提供远程登录功能,一台计算机用户可以登录到远程的另一台计算机上,如同在远程主机上直接操作一样. 
+2、ftp（file transfer protocol）：远程文件传输协议,允许用户将远程主机上的文件拷贝到自己的计算机上. 
+3、smtp（simple mail transfer protocol）：简单邮政传输协议,用于传输电子邮件. 
+4、nfs（network file server）：网络文件服务器,可使多台计算机透明地访问彼此的目录. 
+5、udp（user datagram protocol）：用户数据包协议,它和tcp一样位于传输层,和ip协议配合使用,在传输数据时省去包头,
+   但它不能提供数据包的重传,所以适合传输较短的文件. 
+
+http协议简介 
+http是一个属于应用层的面向对象的协议,由于其简捷、快速的方式,适用于分布式超媒体信息系统.它于1990年提出,经过几年的使用与发展,
+得到不断地完善和扩展.目前在www中使用的是http/1.0的第六版,http/1.1的规范化工作正在进行之中,而且
+http-ng(next generation of http)的建议已经提出.http协议的主要特点可概括如下：
+ 
+1.支持客户/服务器模式. 
+2.简单快速：客户向服务器请求服务时,只需传送请求方法和路径.请求方法常用的有get、head、post.每种方法规定了客户与服务器联系的类型不同. 
+  由于http协议简单,使得http服务器的程序规模小,因而通信速度很快. 
+3.灵活：http允许传输任意类型的数据对象.正在传输的类型由content-type加以标记. 
+4.无连接：无连接的含义是限制每次连接只处理一个请求.服务器处理完客户的请求,并收到客户的应答后,即断开连接.采用这种方式可以节省传输时间. 
+5.无状态：http协议是无状态协议.无状态是指协议对于事务处理没有记忆能力.缺少状态意味着如果后续处理需要前面的信息,则它必须重传,这样可能
+  导致每次连接传送的数据量增大.另一方面,在服务器不需要先前信息时它的应答就较快.
+ 
+1,右键项目名称 BuildPath ---> Configure Build Paht...中,然后上面有几个选项卡找到 Libraries中出现红色叉号的包为路径错误的包.
+到classpath中修改相应包的当前路径.然后回到eclipse中F5刷新工程.不行的话可以试试clean项目;
+
+project--->clean
+如果你的eclipse项目有红色叹号,而Libraries中没有出现红色叉号的包,我是这样做的.
+1,先把eclipse转换到Markers视图,windows---->show view ---->markers 
+你会发现这些报错内容,
+Archive for required library: ‘XXXXXXXX001’ in project ‘xxxxxxxxx’ cannot be read or is not a valid ZIP file
+2,用记事本打开项目根目录的.classpath文件,找到“<classpathentry kind=”lib” path=”XXXXXXXXX001”/>”这一行,删掉
+保存,刷新后,这个报错就没有了,从而红色叹号也没有了.
+ 
+SOAP(Simple Object Access Protocol) 简单对象访问协议；
+WSDL(Web Services Description Language) Web服务描述语言；
+UDDI (Universal Description Discovery and Integration) 统一描述、发现和整合规范.
+WSDL用来描述服务；
+UDDI用来注册和查找服务；
+而SOAP,作为传输层,用来在消费者和服务提供者之间传送消息.SOAP是Web服务的默认机制,其他的技术为可以服务实现其他类型的绑定.
+用户可以在UDDI注册表（registry）查找服务,取得服务的WSDL描述,然后通过SOAP来调用服务.
+ 
+Web Services 是一个可以将应用程序变为web应用程序,将自己本地的应用程序信息通过网络,发布到网络当中,让别人通过浏览器等访问本地的信息.
+SOAP 是定义访问Web Services 的协议,也就是哪些是可以访问的,怎样的格式才能够访问,返回的格式又是什么样的,这些都是SOAP定义的.
+WSDL 是描述SOAP协议的具体语言,用WSDL实现SOAP协议,把它写成文件,直接访问.
+UDDI,是把这些web services 收集和存储起来,这样当别人访问这些信息的时候就从UDDI中查找,看有没有这个信息存在.
+ 
+如何调用Web Services 
+客户端:取得服务端的服务描述文件WSDL,解析该文件的内容,了解服务端的服务信息,以及调用方式.根据需要,生成恰当的SOAP请求消息
+(指定调用的方法,已经调用的参数),发往服务端.等待服务端返回的SOAP回应消息,解析得到返回值. 
+服务端:生成服务描述文件,以供客户端获取.接收客户端发来的SOAP请求消息,解析其中的方法调用和参数格式.根据WSDL和WSML的描述,
+调用相应的COM对象来完成指定功能,并把返回值放入SOAP回应消息返回给用户. 
+ 
+SOAP ,WSDL 和UDDI 是Web Services 框架的核心技术..(1)SOAP 是Web services 的通信协议.SOAP是一种简单的、轻量级的基于XML 的机制,
+用于在网络应用程序之间进行结构化数据交换.SOAP包括三部分:一个定义描述消息内容的框架的信封,一组表示应用程序定义的数据类型实例
+的编码规则,以及表示远程过程调用和响应的约定. (2)WSDL表示WEB服务说明语言.WSDL文件是一个XML 文档,用于说明一组SOAP消息以及如何
+交换这些消息. (3)UDDI(统一描述发现和集成) 提供一种发布和查找服务描述的方法.UDDI 数据实体提供对定义业务和服务信息的支持.WSDL 
+中定义的服务描述信息是UDDI注册中心信息的补充.
+
+Web Services 服务提供方通过WSDL描述所提供的服务,并将这一描述告知Web Services 注册服务器.注册服务器依据WSDL 的描述,依照UDDI的
+协定更新服务目录并在Internet 上发布.用户在使用Web Services 前先向注册服务器发出请求,获得Web Services 提供者的地址和服务接口
+信息,之后使用SOAP 协议与Web Services 提供者建立连接,进行通信.
+Web Services 的技术主要建立在XML 的规范之上,这保证了这一体系结构的平台无关性、语言无关性和人机交互性能.
+SOAP消息代理是整个框架的信息处理中心,它根据预先定义好的应用消息转换机制将消息转换成目标应用需要的数据并存储到应用消息仓库中.
+除了保存和转发应用消息之外,消息代理还负责将不同的企业应用所保存的应用数据通过企业模型转化为一致的企业数据,保存到数据库中.
+客户端通过UDDI的标准和机制来搜寻需要的web服务,绑定找到的web服务并使用它提供的服务.另外,框架为企业进一步发展电子商务提供了接口
+建立在UDDI基础上的Web services可以完成这一功能.
+
+// spring 配置文件初始化 MAP 数据
+<bean id="abc_specialCommandMap" class="java.util.HashMap">
+	<constructor-arg>
+		<map>	
+			<entry key="M2002064" value="abc_SpecialBusinessQueryCmdImpl" />
+		</map>
+	</constructor-arg>
+</bean>
