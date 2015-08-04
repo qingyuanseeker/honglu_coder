@@ -1,0 +1,125 @@
+package com.huawei.csp.customization.cmcc.open.service.impl;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+　*  移动： 134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
+　*  联通： 130、131、132、152、155、156、185、186
+　*  电信： 133、153、180、189、（1349卫通）
+  */
+public class CheckTeleNo
+{
+    public static boolean isMobileNo(String mobilesNo)
+    {
+        Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        Matcher matcher = pattern.matcher(mobilesNo);
+        
+        return matcher.matches();
+    }
+    
+    public static boolean isMobileNo(String mobilesNo, String params)
+    {
+        String telNo = mobilesNo;
+        String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
+        Pattern pattern = Pattern.compile(regExp);
+        Matcher matcher = pattern.matcher(telNo);
+        return matcher.find();
+    }
+    
+    public static boolean checkEmail(String email)
+    {
+        boolean flag = false;
+        try
+        {
+            String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+            Pattern regex = Pattern.compile(check);
+            Matcher matcher = regex.matcher(email);
+            flag = matcher.matches();
+        }
+        catch (Exception e)
+        {
+            flag = false;
+        }
+        
+        return flag;
+    }
+    
+    public static boolean checkMobileNumber(String mobileNumber)
+    {
+        boolean flag = false;
+        try
+        {
+            Pattern regex =
+                Pattern.compile("^(((13[0-9])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8})|(0\\d{2}-\\d{8})|(0\\d{3}-\\d{7})$");
+            Matcher matcher = regex.matcher(mobileNumber);
+            flag = matcher.matches();
+        }
+        catch (Exception e)
+        {
+            flag = false;
+        }
+        
+        return flag;
+    }
+}
+
+// 分组统计查询示例: 
+type     AD       value     
+A        in       200
+A        out      50
+B        in       100
+
+一条sql 计算 每个type的剩余量, in 代表增减 out 代表减少.
+
+DROP TABLE IF EXISTS `test`;
+CREATE TABLE `test` (
+  `type` varchar(255) DEFAULT NULL,
+  `AD` varchar(255) DEFAULT NULL,
+  `value` int(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of test
+-- ----------------------------
+INSERT INTO `test` VALUES ('A', 'in', '200');
+INSERT INTO `test` VALUES ('A', 'out', '50');
+INSERT INTO `test` VALUES ('B', 'in', '100');
+
+select type, sum(value * (case when AD = 'in' then 1 when AD = 'out' then -1 end))  as '剩余量'
+from test group by type;
+
+// 分组统计查询示例: 
+SELECT 班级表.班级编号,班级表.班级名称, SUM(DECODE(性别, '1', 1)) 女生人数, SUM(DECODE(性别, '0', 1)) 男生人数  
+ FROM  学生表, 班级表 
+WHERE  学生表.班级编号 = 班级表.班级编号 
+GROUP  BY 班级表.班级编号, 班级表.班级名称;
+
+// 利用 wsdl 文件生成 java 代码 >> 在eclipse 中也有实现加参数的方法
+-o 是指输出的目录 
+-p 是指输出在哪个java包下面,注意同类覆盖的问题
+-s --server-side是指生成服务端的描述文件,即wsdd 
+-o output 
+-p com.huawei.csp.customization.pae
+-u D:/tool/BasicServices.wsdl [类linux路径分隔]
+在Unix/Linux中,路径的分隔采用正斜杠"/",比如"/home/hutaow"；而在Windows中,路径分隔采用反斜 杠"\"
+比如"C:\Windows\System", 有时我们会看到这样的路径写法,"C:\\Windows\\System",也就是用两个反斜杠
+来分隔路径,这种写法在网络应用或编程中经常看到,事实上,上面这个路径可以用"C:/Windows/System"来代替
+不会出错,但是如果写成了"C:\Windows\System",那就可能会出现各种奇怪的错误了
+
+在eclipse里面做这件事的话简直太容易了 >>>
+
+下载axis-1.4.1-bin.zip,下载地址是http://www.apache.org/dyn/closer.cgi/ws/axis/1_4.解压,
+要用到lib里的所有jar包,但是这里还不够,还要再另外下载几个,activation.jar, mail.jar, xmlsec-1.2.1.jar, xalan.jar.
+eclipse里进行第二个步骤,新建一个工程,然后将刚才提到的所有jar包引入,
+找到axis.jar里的WSDL2Java.class文件,这class是可以右键run的.
+右键点击WSDL2Java.class -- run us -- run Configurations -- Arguments,Program argument.这里是给main传参数的,
+在这里参数自然就是wsdl文件的位置了.输入-p packagename -u XXX\XX.wsdl,(XXX代表路径),或者wsdl地址也可以
+
+obligation 义务的 = optional
+mandatory adj.强制的; 命令的; 受委托的; 
+
+// junit 连数据库进行单元测试:
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:/application-context.xml")
+public class ServiceTest { ...... }
