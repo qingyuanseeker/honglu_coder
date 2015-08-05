@@ -1,0 +1,348 @@
+package com.qingyuan.proxy;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+// Java Exception 捕获和展示
+// http://blog.csdn.net/hongweigg/article/details/18313461
+public class ExceptionHandler
+{
+    /*哈希算法也称为散列算法，是将数据依特定算法直接指定到一个地址上 >> eqauls() 和 hashCode()
+    这样一来，当集合要添加新的元素时,先调用这个元素的hashCode方法,就一下子能定位到它应该放置的物理位置上,
+    如果这个位置上没有元素,它就可以直接存储在这个位置上,不用再进行任何比较了；如果这个位置上已经有元素了, 
+    就调用它的equals方法与新元素进行比较,相同的话就不存了,不相同就散列其它的地址,所以这里存在一个冲突解
+    决的问题,这样一来实际调用equals方法的次数就大大降低了,几乎只需要一两次 */
+    public static void main(String[] args)
+    {
+        int a = hash(895689);
+        int b = hash(895689);
+        
+        System.out.println(a);
+        System.out.println(b);
+        
+        try
+        {
+             throw new NullPointerException();   
+        } 
+        catch (Exception e) 
+        {
+            // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数timerBegin;行数65
+            // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数main;行数24
+            exceptionToString(new NullPointerException());
+        }
+        finally
+        {
+            // 类名： com.qingyuan.proxy.ExceptionHandler; 方法名:main;
+            // 这里打印的主调用函数的方法名
+            timerBegin();
+        }
+        
+    }
+    
+    private static int hash(int h) 
+    {
+        // Spread bits to regularize both segment and index locations,
+        // using variant of single-word Wang/Jenkins hash.
+        h += (h <<  15) ^ 0xffffcd7d;
+        h ^= (h >>> 10);
+        h += (h <<   3);
+        h ^= (h >>>  6);
+        h += (h <<   2) + (h << 14);
+        return h ^ (h >>> 16);
+    }
+    
+    public static String exceptionToString(Exception e)
+    {  
+         if(e == null)  
+         {
+             return null;   
+         }
+
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+
+        try 
+        {
+            // Java IO 装饰模式
+             e.printStackTrace(new PrintStream(baos));  
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        String result = "";
+        if(!"".equals(baos.toString()))
+        {
+            result = baos.toString().substring(0, baos.toString().indexOf("Exception") + "Exception".length());
+            //System.out.println(baos.toString().substring(0, baos.toString().indexOf("Exception")+9));
+            //String[] str = baos.toString().split(":");
+            //result = str[0];
+        }
+        
+        System.out.println(result);
+        return result;  
+
+     } 
+    
+    public void exceptionRecord()
+    {
+        try 
+        {
+            FileInputStream fis = new FileInputStream("d:\\test.txt");
+            fis.read();
+        } 
+        catch (Exception e) 
+        {
+            e.printStackTrace();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            e.printStackTrace(new PrintStream(baos));
+            String exception = baos.toString();
+            System.out.println("exception:" + exception);
+        }
+    }
+    
+    public static String timerBegin()
+    {
+        String serial = "";
+        try
+        {
+            // 函数调用栈结构层次
+            StackTraceElement[] stacks = new Throwable().getStackTrace();   
+            for (StackTraceElement se: stacks)
+            { 
+                // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数timerBegin;行数53
+                // 类名:com.qingyuan.proxy.ExceptionHandler;所在的函数main;行数14
+                System.out.println("类名:" + se.getClassName() + ";所在的函数" + se.getMethodName() + 
+                    ";行数" + se.getLineNumber());
+            }
+            
+            String className = stacks[1].getClassName();
+            String methodName = stacks[1].getMethodName();
+            // String _methodName =  new Exception().getStackTrace()[1].getMethodName();// 获得调用者的方法名   
+            // String _thisMethodName = new Exception().getStackTrace()[0].getMethodName();// 获得当前的方法名
+            InetAddress localhost = null;
+            String ipaddress = "";
+            
+            try 
+            {
+                localhost = InetAddress.getLocalHost();
+                ipaddress = localhost.getHostAddress();
+            } 
+            catch (UnknownHostException e) 
+            {
+                e.printStackTrace();
+            } 
+            
+            System.out.println("类名： " + className + "; 方法名:" + methodName + ";主机:" + localhost + ";IP:" + ipaddress);
+           
+        }
+        catch (RuntimeException e)
+        {
+            
+            e.printStackTrace();
+        }
+       return serial;
+    }
+}
+
+package com.qingyuan.proxy;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import org.junit.Test;
+
+/**
+ * Throwable java 中强大的异常处理功能, 在开发中可以得到很好的体现, 我们在多线程任务执行的时候可以
+ * 利用此类, 记录详细的执行日志<轨迹>,可以生成一张日志表;
+ * 得到调用方法的全部信息,方便定位问题,在代码多少行就可以明确指定,是查询和定位必备之良品;
+ * 
+ * 夯实java 基础知识: 
+ * StackTraceElement[] stacks = new Throwable().getStackTrace(); 
+ * InetAddress
+ * process = Runtime.getRuntime().exec(); |  process.waitFor();
+ * long startexecutiveTime = System.currentTimeMillis();
+ */
+public class ExceptionClassDigger
+{
+    public static void timerBegin()
+    {
+        try
+        {   
+            // 文件执行栈元素对象 <[java.lang.StackTraceElement]> public final class StackTraceElement implements java.io.Serializable
+            StackTraceElement[] stacks = new Throwable().getStackTrace();    
+            String className = stacks[1].getClassName();
+            String methodName = stacks[1].getMethodName();
+            stacks[0].getClassName(); // com.qingyuan.proxy.ResoucePathChecker
+            stacks[0].getFileName();  // ResourcePathChecker.java
+            stacks[0].getMethodName(); // timerBegin()
+         
+            stacks[1].getClassName();  // com.qingyuan.proxy.ResoucePathChecker
+            stacks[1].getFileName(); // ResourcePathChecker.java
+            stacks[1].getMethodName(); // testPath()
+            stacks[1].getLineNumber(); // 73
+ 
+            InetAddress localhost = null;
+            String ipaddress = "";  
+            
+            try 
+            {
+                localhost = InetAddress.getLocalHost();
+                ipaddress = localhost.getHostAddress();
+            } 
+            catch (UnknownHostException e) 
+            {
+                e.printStackTrace();
+            } 
+
+            // com.qingyuan.proxy.ResourcePathChecker : testPath : XWX192794C/10.45.0.234 : 10.45.0.234................
+            System.out.print(className + "\n" + methodName + "\n" + localhost + "\n" + ipaddress);
+            System.out.println("................");
+            
+            /*TimerMonitoring timerMonitoring = new TimerMonitoring();
+            timerMonitoring.setSerial(serial);
+            timerMonitoring.setBegintime(new Date());
+            timerMonitoring.setState(TimerMonitoringConfig.TIMER_MONITORING_STATE_CODE2);
+            timerMonitoring.setClassName(className);
+            timerMonitoring.setMethodname(methodName);
+            timerMonitoring.setIpaddress(ipaddress);
+            TimerMonitoringService timerMonitoringService = (TimerMonitoringService)ContextHolder.getBean("c_smt_timerMonitoringService");
+            timerMonitoringService.insert(timerMonitoring);*/
+        }
+        catch (Exception e) { }
+        
+     }     
+
+    /**
+     * 将异常信息记录, 得到具体是什么类型的异常,比如: <[java.lang.NullPointerException]>
+     * @param e
+     * @return String
+     */
+    public static String exceptionToString(Exception e)
+    {  
+         if(e == null)  
+         {
+             return null;   
+         }
+         ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+
+         try 
+         {
+             e.printStackTrace(new PrintStream(baos)); // 将输出流
+         } 
+         catch (Exception ex) 
+         {
+            ex.printStackTrace();
+         }
+
+        String result = "";
+        String eee =  baos.toString();
+            /*eee= "java.lang.NullPointerException : null pointer here
+            at com.qingyuan.proxy.ExceptionClassDigger.testPath(ExceptionClassDigger.java:120)
+            at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+            at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+            at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+            at java.lang.reflect.Method.invoke(Method.java:597) ";*/        
+        if(!"".equals(baos.toString()))
+        {
+            String[] str = baos.toString().split(":");
+            result = str[0];
+        }
+        
+        System.out.println(result); // java.lang.NullPointerException
+        return result;  
+     }
+    
+    public boolean equals(Object obj) 
+    {
+        if (obj==this)
+        {
+            return true;
+        }
+        if (!(obj instanceof StackTraceElement))
+        {
+            return false;
+        }
+        StackTraceElement e = (StackTraceElement)obj;
+        
+       /* return e.declaringClass.equals(declaringClass) && e.lineNumber == lineNumber
+       && eq(methodName, e.methodName) && eq(fileName, e.fileName);*/
+        return true;
+    }
+    
+    @Test
+    public  void testPath() 
+    {
+        timerBegin();
+        
+        exceptionToString(new NullPointerException("null pointer here"));
+    }
+}
+
+
+// 类名,方法名作为属性的类,利用invocate方法来调用目标方法: >> Spring 框架[定时任务]
+import org.springframework.util.MethodInvoker;
+MethodInvoker mInvoker = new MethodInvoker();
+String taskResult=InfoConstant.getEXECUTE_RESULT_FAIL();
+if (taskInfo != null)
+{
+	String interfac = (String)this.clientInterfaceCommandMap.get(taskInfo.getInterfaceType());
+	mInvoker.setTargetClass(Class.forName(InfoConstant.getCLIENTEXECUTIONCLASS()));
+	mInvoker.setTargetMethod(interfac);
+	mInvoker.setArguments(new Object[] {taskInfo});
+	mInvoker.prepare();
+	taskResult = (String)mInvoker.invoke();
+}
+
+// struts2 工作原理图
+http://blog.csdn.net/wuwenxiang91322/article/details/11070513
+
+// java 基础数据结构学习<必须熟练>
+http://blog.csdn.net/wuwenxiang91322/article/details/12259099
+http://www.cnblogs.com/liuling/p/2013-7-24-01.html
+http://edu.csdn.net/course/detail/421
+
+yum= 全称为 Yellow dog Updater, Modified是一个在Fedora和RedHat以及SUSE中的Shell前端软件包管理器,
+基於RPM包管理,能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系,并且一次安装所有依
+赖的软体包,无须繁琐地一次次下载,安装,yum提供了查找,安装,删除某一个,一组甚至全部软件包的命令,而且
+命令简洁而又好记
+
+产品设计文档:
+bipcode businesscode 对应一个大的接口,大的接口定义某个属于字段适配小接口需要;
+接口消息结构:
+soap 消息结构
+http+xml 消息结构
+http+json 消息结构
+
+XML请求地址
+http://ip:port/xyz/xml/服务名/接口名称
+如:http://wap.dm.10000.cn/xyz/xml/EndUserServices/getUserInfo
+
+JSON请求地址
+http://ip:port/xyz/json/服务名/接口名称
+如:http://wap.dm.10000.cn/xyz/json/EndUserServices/getUserInfo
+
+SOAP请求地址
+http://ip:port/xyz/soap/服务名/接口名称
+如:http://wap.dm.10000.cn/xyz/soap/EndUserServices/getUserInfo
+
+数据类型
+基本数据类型
+复合数据类型 >> UserID用户标识
+1	ID	     M	String	21	用户标识
+2	type	 M	Int4	4	用户标识类型
+
+SOAP定义:
+
+SOAP >> Simple Object Access Protocol 简单对象访问协议是在分散或分布式的环境中交换信息的简单的协议,是一个基于
+XML的协议．它包括四个部分：
+SOAP 封装(SOAP envelop)：封装定义了一个描述消息中的内容是什么是谁发送的,谁应当接受并处理它以及如何处理它们的框架；
+SOAP 编码规则(SOAP encoding rules)：用于表示应用程序需要使用的数据类型的实例; 
+SOAP RPC表示(RPC representation)：表示远程过程调用和应答的协定; 
+SOAP 绑定(SOAP binding)：使用底层协议交换信息
+SOAP 消息SOAP,采用了已经广泛使用的两个协议：HTTP和XML,其中HTTP用于实现SOAP的RPC风格的传输,而XML是它的编码模式,一个
+    SOAP请求实际上就是一个HTTPPOST请求。
