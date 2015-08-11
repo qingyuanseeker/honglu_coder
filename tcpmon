@@ -1,0 +1,51 @@
+
+<< ctrl + shift + 0 >> 
+
+if (tProv != null && tProv.equals("000")) 
+if (datagram.getActionCode().equals("1"))
+需要注意"AAAA".equals(a) 和 a.equals("AAA")是不同的,因为a为null时,第二个会报错
+这种情况很容易写错,为了防止这种情况,当时的规范是,如果有常量判断的话,把常量放在前面
+这样由于常量无法赋值,就会发生编译错误, 也就是说 c==1 和1 ==c都是一样的,可是 c==1可
+能错误的写成c=1,而1==c不可能错误的写成1=c
+
+//当响应为1时，在响应报文中添加如下字段
+if (datagram.getActionCode().equals("1")){}
+if (tProv != null) 
+把常量放在前面这样由于常量无法赋值,就会发生编译错误,另外null对象调equals方法会报错,
+所以,提到把常量放在左边.
+if ("1".equals(datagram.getActionCode()) ){}
+if (null != tProv) 
+
+// 利用 wsdl 文件生成 java 代码 >> 在eclipse 中也有实现加参数的方法
+-o 是指输出的目录 
+-p 是指输出在哪个java包下面,注意同类覆盖的问题
+-s --server-side是指生成服务端的描述文件,即wsdd 
+-o output 
+-p com.huawei.csp.customization.pae
+-u D:/tool/BasicServices.wsdl [ >> 类linux路径分隔 << ]
+
+<[TcpMonitor的安装]>
+1.在apache网站上下载axis工程，将下载完的压缩包解压到本地磁盘。
+2.运行tcpmon只需要axis.jar就够了
+3.运行命令打开配置界面：java –cp  axis.jar  org.apache.axis.utils.tcpmon
+
+http://blog.csdn.net/xiazdong/article/details/7040762
+var fso = new ActiveXObject("Scripting.FileSystemObject"); 
+var path=decodeURI(fso.GetParentFolderName(location.href))+"/files/";
+java -cp  axis-1.3.jar  org.apache.axis.utils.tcpmon
+
+<!--针对不同的包,配置不同的日志级别:http://my.oschina.net/exit/blog/182445-->
+<appender name="CUSTOMIZATION" class="org.apache.log4j.RollingFileAppender" >
+<param name="File" value="local/customization.log" />
+<param name="MaxBackupIndex" value="10" />
+<param name="MaxFileSize" value="1MB" />
+<layout class="org.apache.log4j.PatternLayout">
+  <param name="ConversionPattern" value="[%-d{MM-dd HH:mm:ss:SSS}][%t][%p][%c]- %m %n" />
+</layout>
+</appender>
+
+<category name="com.xianghong.huake.customization">
+	<priority value="INFO" />
+	<appender-ref ref="CUSTOMIZATION" />
+</category>
+
